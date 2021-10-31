@@ -9,7 +9,7 @@ from config import JULIUS_PATH, ROOT_PATH
 def run_julius(input_wav: pathlib.Path):
 
     with open(JULIUS_PATH / 'test.dbl', 'w') as f:
-        f.write(input_wav)
+        print(input_wav, file=f)
 
     process = subprocess.Popen([
         config.JULIUS_EXE_PATH,
@@ -49,7 +49,8 @@ def run_julius(input_wav: pathlib.Path):
 
 
 if __name__ == "__main__":
-    sentences, phonemes = run_julius(JULIUS_PATH/"len.wav", ROOT_PATH/"aa.txt")
+    sentences, phonemes = run_julius(ROOT_PATH/"tmp"/"Nagranie (5).wav")
+    # sentences, phonemes = run_julius(ROOT_PATH/"tmp"/"litwo1.wav")
     print(sentences)
 
 
