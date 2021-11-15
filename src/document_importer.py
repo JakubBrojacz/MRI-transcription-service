@@ -39,9 +39,13 @@ def preprocess(content: str):
 
 def import_directory(input_path: pathlib.Path):
     result = []
-    for file in input_path.iterdir():
+    for file in input_path.rglob("*"):
         if file.suffix in SUPPORTED_TEXT_TYPES:
-            file_content = import_document(file)
-            file_content = preprocess(file_content)
-            result.append(file_content)
+            print(file.name)
+            try:
+                file_content = import_document(file)
+                file_content = preprocess(file_content)
+                result.append(file_content)
+            except Exception:
+                print(f"ERROR with document {file}")
     return result
