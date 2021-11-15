@@ -4,6 +4,7 @@ import json
 
 import document_importer
 import ngram_model
+import config
 
 
 def parse_args():
@@ -13,19 +14,28 @@ def parse_args():
                         default=None,
                         help='Input reports',
                         type=pathlib.Path)
+    parser.add_argument('--model', '-M',
+                        default=None,
+                        help='Input reports',
+                        type=pathlib.Path)
     args = parser.parse_args()
     return args
 
 
 def main(args):
-    output = document_importer.import_directory(args.input)
-    print(output)
-    model = ngram_model.NGramModel(5)
-    for document in output:
-        model.add_document(document)
-    print(model.model)
-    with open("tmp/a.json", 'w') as f:
-        json.dump(model.model, f, indent=4)
+    if args.model:
+        model = ngram_model.NGramModel.from_json(args.model)
+    else:
+        output = document_importer.import_directory(args.input)
+        # print(output)
+        model = ngram_model.NGramModel(5)
+        for document in output:
+            model.add_document(document)
+        # print(model.model)
+        with open(config.TMP_PATH / "a.json", 'w') as f:
+            json.dump(model.model, f, indent=4)
+
+    print(model.predict("zmiany".split()))
 
 
 
