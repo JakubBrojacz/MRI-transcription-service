@@ -2,6 +2,7 @@
 julius/
 ffmpeg/
 data_conf/
+tmp/
 
 
 # Byte-compiled / optimized / DLL files
