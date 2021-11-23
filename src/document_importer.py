@@ -25,7 +25,8 @@ def import_document(input_path: pathlib.Path):
 
 
 def preprocess(content: str):
-    content = content[content.find('MR'):]
+    content = content.lower()
+    content = content[content.find('mr'):]
     content = content.replace('\n', ' ').replace('\r', ' ')
     content = ''.join((
         char

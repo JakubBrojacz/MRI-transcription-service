@@ -1,18 +1,27 @@
 from nltk.util import ngrams
 import json
+import pickle
+
+import config
 
 
 class NGramModel:
     def __init__(self, max_n=5):
         self.max_n = max_n
         self.model = {}
+        self.model_kwords = set()
 
     @classmethod
-    def from_json(cls, json_path, max_n=5):
-        print(f'loading model from {json_path}')
-        model = NGramModel(max_n)
-        with open(json_path, 'r') as f:
-            model.model = json.load(f)
+    def load(cls, filename):
+        print(f'loading model from {filename}')
+        with open(config.TMP_PATH / filename, 'rb') as f:
+            model = pickle.load(f)
+        return model
+
+    def save(self, filename):
+        print(f'saving model from {filename}')
+        with open(config.TMP_PATH / filename, 'wb') as f:
+            model = pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
         return model
 
     def add_phrase(self, phrase):
@@ -30,10 +39,13 @@ class NGramModel:
             igrams = ngrams(splitted, i)
             for igram in igrams:
                 self.add_phrase(igram)
+        kgrams = ngrams(splitted, self.max_n)
+        for kgram in kgrams:
+            self.model_kwords.add(' '.join(kgram))
 
     def predict(self, words):
         result = {}
-        
+
         for i in range(1, self.max_n):
             if len(words) < i:
                 return result
@@ -46,5 +58,6 @@ class NGramModel:
             for pred_word in tmp_model:
                 if pred_word == 'NUM':
                     continue
-                result[pred_word] = result.get(pred_word, 0) + tmp_model[pred_word]['NUM']*i
+                result[pred_word] = result.get(
+                    pred_word, 0) + tmp_model[pred_word]['NUM']*i
         return result
