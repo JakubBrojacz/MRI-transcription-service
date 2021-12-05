@@ -15,10 +15,13 @@ AudioSegment.ffprobe = str(config.FFPROBE_PATH)
 
 def convert_m4a_wav(input_file: pathlib.Path, output_dir: pathlib.Path):
     output_filename = output_dir / (input_file.stem + '.wav')
-    track = AudioSegment.from_file(input_file, 'm4a')
+    if input_file.suffix == '.wav':
+        track = AudioSegment.from_file(input_file, 'wav')
+    else:
+        track = AudioSegment.from_file(input_file, 'm4a')
     track = track.set_frame_rate(16000)
     track += 30
-    track = track.low_pass_filter(500).high_pass_filter(10000)
+    track = track.low_pass_filter(1000).high_pass_filter(1000)
     track += 10
     track.export(output_filename, 'wav', bitrate="192k")
     rate, data = wavfile.read(output_filename)

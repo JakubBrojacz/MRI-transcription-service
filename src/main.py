@@ -1,7 +1,12 @@
 import argparse
+import itertools
 import pathlib
 import unicodedata
 import json
+from itertools import groupby
+import random
+import functools
+
 
 import pandas as pd
 from tqdm import tqdm
@@ -58,7 +63,7 @@ def main(args):
     else:
         output = document_importer.import_directory(args.model_input)
         # print(output)
-        model = ngram_model.NGramModel(3)
+        model = ngram_model.NGramModel(5)
         print(f"Initialising {model.max_n}-gram model")
         for document in output:
             model.add_document(document)
@@ -76,6 +81,8 @@ def main(args):
     print(track.hypothesis_phon)
 
     reference = document_importer.import_document(args.doc)
+    # print(reference)
+    # input()
     reference = document_importer.preprocess(reference)
     print()
     print("reference orth:")
@@ -98,34 +105,54 @@ def main(args):
     config_nw["MAX SEQ LENGTH"] = 10000
     config_nw["MAX NUMBER PATHS"] = 1
     config_nw["SMITH WATERMAN"] = 1
-    # table = needelman_wunsh.alignment(track.hypothesis_phon, reference_phon, config_nw)
-    # print(table)
-    # paths = needelman_wunsh.DFS(track.hypothesis_phon, reference_phon, config_nw, table)
-    # needelman_wunsh.visualise(track.hypothesis_phon, reference_phon, paths)
 
-    # aa = "KTÓRE NIESTETY BYŁY BYDŁEM CO BYŁEGO MINISTRA BY M.IN." +\
-    #     " SPECYFICZNE TŁUMACZYŁ PREMIER WIELKOŚCI GOOGLE CZTERY" +\
-    #     " METRY KLIKAJĄC ZAPEWNE SEJM SUBSTANCJI ŻEBY BYŁY USŁUGĘ" +\
-    #     " PRAWIDŁOWY TO CO ROBIMY PRZEMIESZCZAMY SYMETRYCZNIE W" +\
-    #     " POSZERZONYM O TO ŻEBY TYLKO KOMOROWYCH KROPKĘ E NIE MA " +\
-    #     "PRZYGODĘ PRZEŻYŁ CZYSTE SZEROKOŚCI OK. CZTERY I PÓŁ METRYKĘ" +\
-    #     " A NA CZWARTYM MIEJSCU W KTÓRYM BYŁY PRAWIDŁOWE NIE SKŁADA SI" +\
-    #     "Ę Z NIEPRAWIDŁOWEGO PROWADZENIA KONTRASTU PROBLEM W SZERSZYM " +\
-    #     "MIŁOŚĆ DO TORBY WIELKOŚCI RODZĄCEGO SZEŚCIU MILIMETRÓW NIEZMI" +\
-    #     "ERNIE WYJAŚNIONO MĘSKIM CZY KILKA DROBNEGO ZGODNIE Z TYŁU NAC" +\
-    #     "ZEPY RP TO WSZYSTKO"
-    # epi = epitran.Epitran('pol-Latn')
-    # output_phon = epi.transliterate(aa)
+    dna1 = track.hypothesis_phon
+
+    max_num_of_kmers = min(100000, len(model.model_kwords))
+    print()
+    print(
+        f'Choosing {max_num_of_kmers} from {len(model.model_kwords)} sequences')
+    print()
+    l1 = random.sample(model.model_kwords, max_num_of_kmers)
+    with open(config.TMP_PATH / 'output_params.txt', 'w') as f:
+        # for p1, p2 in tqdm(itertools.product([-1, -2, -3, -4, -0.5, -1.5],
+        #                                      [-0, -0.1, -0.3, -0.5, -1])):
+        for p1, p2 in tqdm(itertools.product([-1],
+                                             [-0.3])):
+            if p1 < p2:
+                test_with_params1(dna1, g2p, l1, track,
+                                 reference, p1, p2, f, (p1 == -1) and (p2 == -0.3), model)
+
+
+def string_overlap(s1, s2):
+    for id_start in range(len(s1)):
+        done = True
+        if len(s2) < len(s1)-id_start:
+            continue
+        for s2_id in range(len(s1)-id_start):
+            if s1[id_start+s2_id] != s2[s2_id]:
+                done = False
+                break
+        if done:
+            return id_start
+    return -1
+
+
+def test_with_params(dna1, g2p, l1, track, reference, param1, param2, f_out, save_kmer_score=False):
+    '''
+    param1 - break start (-1)
+    param2 - break continue (-0.3)
+    '''
+
+    print(f'param1: {param1}', file=f_out)
+    print(f'param2: {param2}', file=f_out)
 
     kgram_score = {}
-    # track.hypothesis_phon = 'meskjimtsIkjilkadrobnegozgodneztIwunatsepIrp'
-    dna1 = track.hypothesis_phon
-    import random
-    l1 = random.sample(model.model_kwords, min(10000, len(model.model_kwords)))
+
     for kgram in tqdm(l1):
-        dna2 = g2p.transliterate(''.join(kgram.split()))
+        dna2 = ''.join(g2p.transliterate(kgram).lower().split())
         alignemnt = pairwise2.align.localxs(
-            dna1, dna2, -1, -0.3, one_alignment_only=True)[0]
+            dna1, dna2, param1, param2, one_alignment_only=True)[0]
         # print()
         # print(pairwise2.format_alignment(*alignemnt))
         # print(alignemnt)
@@ -143,32 +170,19 @@ def main(args):
 
     tmp_l = list(l1)
     tmp_l.sort(key=lambda x: kgram_score[x][1], reverse=True)
-    with open(config.TMP_PATH / 'output.txt', 'w', encoding='utf-8') as f:
-        for kgram in tmp_l:
-            print(f'{kgram}\t\t{kgram_score[kgram][1]}', file=f)
-        # json.dump(tmp_l, f, indent=4)
 
-    from itertools import groupby
-
-    def string_overlap(s1, s2):
-        for id_start in range(len(s1)):
-            done = True
-            if len(s2) < len(s1)-id_start:
-                continue
-            for s2_id in range(len(s1)-id_start):
-                if s1[id_start+s2_id] != s2[s2_id]:
-                    done = False
-                    break
-            if done:
-                return id_start
-        return -1
+    if save_kmer_score:
+        with open(config.TMP_PATH / 'output.txt', 'w', encoding='utf-8') as f:
+            for kgram in tmp_l:
+                print(f'{kgram}\t\t{kgram_score[kgram][1]}', file=f)
+            json.dump(tmp_l, f, indent=4)
 
     used_kgrams = [""]
     last_used = 1
     hypo = track.hypothesis_phon
     ids = [0 for sign in hypo]
     start, end = 0, 0
-    for kgram in tqdm(tmp_l[:1000]):
+    for kgram in tqdm(tmp_l):
         # print(ids[start:end])
         alignment, score = kgram_score[kgram]
         start = alignment.start
@@ -182,7 +196,6 @@ def main(args):
         #         for kgram_id, _ in groupby(ids[start:end])
         #     ]))
         if any(ids[start:end]):
-            # continue
             if ids[start] and ids[end-1]:
                 continue
             tmp_kgram = (' '.join([
@@ -252,14 +265,81 @@ def main(args):
         used_kgrams[kgram_id]
         for kgram_id, _ in groupby(ids)
     )
-    print()
-    print("FIXED:")
-    print(fixed)
-    print()
-    print(f'WER: {metrics.wer(reference, fixed)}')
+    print('', file=f_out)
+    print("FIXED:", file=f_out)
+    print(fixed, file=f_out)
+    print('', file=f_out)
+    print(f'WER: {metrics.wer(reference, fixed)}', file=f_out)
 
+
+def test_with_params1(dna1, g2p, l1, track, reference, param1, param2, f_out, save_kmer_score=False, model=None):
+    '''
+    param1 - break start (-1)
+    param2 - break continue (-0.3)
+    '''
+
+    print(f'param1: {param1}', file=f_out)
+    print(f'param2: {param2}', file=f_out)
+
+    kgram_score = {}
+
+    for kgram in tqdm(l1):
+        dna2 = ''.join(g2p.transliterate(kgram).lower().split())
+        alignemnt = pairwise2.align.localxs(
+            dna1, dna2, param1, param2, one_alignment_only=True)[0]
+        score = alignemnt.score / len(dna2)
+
+        kgram_score[kgram] = (alignemnt, score)
+
+    tmp_l = list(l1)
+    tmp_l.sort(key=lambda x: kgram_score[x][1], reverse=True)
+
+    used_kgrams = [""]
+    last_used = 1
+    hypo = track.hypothesis_phon
+    ids = [0 for sign in hypo]
+    start, end = 0, 0
+
+    kgram = tmp_l[0]
+    alignment, score = kgram_score[kgram]
+
+    start = alignment.start
+    end = alignment.end - alignment.seqA.count('-')
+    result = kgram
+    hypo = dna1
+
+    # forward
+    while end < len(hypo):
+
+        
+
+    print('', file=f_out)
+    print("FIXED:", file=f_out)
+    print(fixed, file=f_out)
+    print('', file=f_out)
+    print(f'WER: {metrics.wer(reference, fixed)}', file=f_out)
+
+
+def gap_function_no_start_penalty(x, y):  # x is gap position in seq, y is gap length
+    if y == 0:  # No gap
+        return 0
+    if x == 0:
+        return 0
+    return -1 + (y-1)*(-0.3)
+
+def gap_function(x, y):  # x is gap position in seq, y is gap length
+    if y == 0:  # No gap
+        return 0
+    return -1 + (y-1)*(-0.3)
 
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args)
+    # main(args)
+
+
+
+    alignment = pairwise2.align.globalmc(
+        "AACDFSB"[::-1], "AACX"[::-1], 100, -1000, gap_function, gap_function_no_start_penalty)
+    for a in alignment:
+        print(pairwise2.format_alignment(*a))

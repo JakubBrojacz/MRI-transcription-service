@@ -33,8 +33,21 @@ class NGramModel:
         model_step["NUM"] = model_step.get("NUM", 0) + 1
 
     def add_document(self, content):
-        splitted = content.split()
-        splitted = ['<START>' for i in range(self.max_n)] + splitted
+        splitted = []
+        i = 0  # index of sign in content
+        j = 0  # index of last sign copied to splitted
+        min_entity_len = 7  # merge words with lower number of signs than this
+        # print(content)
+        # input()
+        while i < len(content) and i >= 0:
+            i += min_entity_len
+            i = content.find(' ', i)
+            if i == -1:
+                i = len(content)
+            splitted.append(content[j:i])
+            j = i+1
+        # splitted = content.split()
+        # splitted = ['<START>' for i in range(self.max_n)] + splitted
         for i in range(1, self.max_n+1):
             igrams = ngrams(splitted, i)
             for igram in igrams:
