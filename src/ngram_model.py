@@ -33,6 +33,17 @@ class NGramModel:
         model_step["NUM"] = model_step.get("NUM", 0) + 1
 
     def add_document(self, content):
+        splitted = content.split()
+        # splitted = ['<START>' for i in range(self.max_n)] + splitted
+        for i in range(1, self.max_n+1):
+            igrams = ngrams(splitted, i)
+            for igram in igrams:
+                self.add_phrase(igram)
+        kgrams = ngrams(splitted, self.max_n)
+        for kgram in kgrams:
+            self.model_kwords.add(' '.join(kgram))
+
+    def add_document_merge_short_words(self, content):
         splitted = []
         i = 0  # index of sign in content
         j = 0  # index of last sign copied to splitted
@@ -48,6 +59,18 @@ class NGramModel:
             j = i+1
         # splitted = content.split()
         # splitted = ['<START>' for i in range(self.max_n)] + splitted
+        for i in range(1, self.max_n+1):
+            igrams = ngrams(splitted, i)
+            for igram in igrams:
+                self.add_phrase(igram)
+        kgrams = ngrams(splitted, self.max_n)
+        for kgram in kgrams:
+            self.model_kwords.add(' '.join(kgram))
+
+    def add_document_skip_short_words(self, content):
+        splitted = content.split()
+        min_entity_len = 7  # skip words with lower number of signs than this
+        splitted = [word for word in splitted if len(word)>=min_entity_len]
         for i in range(1, self.max_n+1):
             igrams = ngrams(splitted, i)
             for igram in igrams:

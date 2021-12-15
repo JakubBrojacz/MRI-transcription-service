@@ -1,7 +1,7 @@
 import pickle
 
 import config
-import sound_preprocessing
+import data_loading.sound_preprocessing as sound_preprocessing
 import julius
 import phonemic
 
