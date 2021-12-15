@@ -4,8 +4,10 @@ import sys
 
 import config
 from config import JULIUS_PATH, ROOT_PATH
+import utils
 
 
+@utils.timeit
 def run_julius(input_wav: pathlib.Path):
 
     with open(JULIUS_PATH / 'test.dbl', 'w') as f:

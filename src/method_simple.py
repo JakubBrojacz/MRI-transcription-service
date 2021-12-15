@@ -9,7 +9,7 @@ import config
 import metrics
 
 
-f_logger = logging.getf_logger("File_Logger")
+f_logger = logging.getLogger("Method_Logger")
 
 
 def string_overlap(s1, s2):
@@ -26,14 +26,14 @@ def string_overlap(s1, s2):
     return -1
 
 
-def test_with_params(dna1, g2p, l1, track, reference, param1, param2, f_out, save_kmer_score=False, model=None):
+def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
     '''
     param1 - break start (-1)
     param2 - break continue (-0.3)
     '''
 
-    f_logger.debug(f'param1: {param1}')
-    f_logger.debug(f'param2: {param2}')
+    # f_logger.info(f'param1: {param1}')
+    # f_logger.info(f'param2: {param2}')
 
     kgram_score = {}
 
@@ -47,12 +47,6 @@ def test_with_params(dna1, g2p, l1, track, reference, param1, param2, f_out, sav
 
     tmp_l = list(l1)
     tmp_l.sort(key=lambda x: kgram_score[x][1], reverse=True)
-
-    if save_kmer_score:
-        with open(config.TMP_PATH / 'output.txt', 'w', encoding='utf-8') as f:
-            for kgram in tmp_l:
-                print(f'{kgram}\t\t{kgram_score[kgram][1]}', file=f)
-            json.dump(tmp_l, f, indent=4)
 
     used_kgrams = [""]
     last_used = 1
@@ -114,5 +108,5 @@ def test_with_params(dna1, g2p, l1, track, reference, param1, param2, f_out, sav
         used_kgrams[kgram_id]
         for kgram_id, _ in itertools.groupby(ids)
     )
-    f_logger.debug("FIXED: {fixed}")
-    f_logger.debug(f'WER after fixing: {metrics.wer(reference, fixed)}')
+    return fixed
+

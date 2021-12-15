@@ -12,8 +12,8 @@ class Recording:
         self.save_path = config.TMP_PATH / (self.path.name+'.pkl')
 
     def process(self, g2p):
-        if self.save_path.exists():
-            return Recording.load(self.save_path)
+        # if self.save_path.exists():
+        #     return Recording.load(self.save_path)
         
         wav_file = sound_preprocessing.convert_m4a_wav(self.path, config.TMP_PATH)
         self.hypothesis = julius.run_julius(wav_file)

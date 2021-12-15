@@ -6,12 +6,7 @@ import data_loading.document_importer as document_importer
 import phonemic
 import data_loading.recording_storage as recording_storage
 import method_simple
-
-f_logger = logging.getf_logger("File_Logger")
-f_logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('spam.log')
-fh.setLevel(logging.DEBUG)
-f_logger.addHandler(fh)
+import utils
 
 
 class ASR:
@@ -26,15 +21,15 @@ class ASR:
         self.max_num_of_kmers = min(100000, len(self.model.model_kwords))
         self.l1 = random.sample(self.model.model_kwords, self.max_num_of_kmers)
 
+    @utils.timeit
     def run(self, sound_file):
         track = recording_storage.Recording(sound_file).process(self.g2p)
-        hypothesis = track.hypothesis_phon
 
-        fixed = method_simple.run_with_params(hypothesis,
+        fixed = method_simple.test_with_params(track.hypothesis_phon,
                                               self.g2p,
                                               self.l1,
                                               track,
                                               -1,
                                               -0.3,
                                               self.model)
-        return hypothesis, fixed
+        return track.hypothesis, fixed
