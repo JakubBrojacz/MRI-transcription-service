@@ -58,7 +58,8 @@ def setup_loggers():
     logger = logging.getLogger("Main_File_Logger")
     logger.setLevel(logging.DEBUG)
     # logger.handlers = []
-    handler = logging.FileHandler(config.LOG_PATH / 'main.log')
+    handler = logging.FileHandler(
+        config.LOG_PATH / 'main.log', encoding='utf-8')
     handler.setLevel(logging.DEBUG)
     logger.addHandler(handler)
 
@@ -72,23 +73,47 @@ def setup_loggers():
     logger = logging.getLogger("Time_Logger")
     logger.setLevel(logging.DEBUG)
     # logger.handlers = []
-    handler = logging.FileHandler(config.LOG_PATH / 'time.log')
+    handler = logging.FileHandler(
+        config.LOG_PATH / 'time.log', encoding='utf-8')
     handler.setLevel(logging.DEBUG)
     logger.addHandler(handler)
 
     logger = logging.getLogger("Method_Logger")
     logger.setLevel(logging.DEBUG)
     # logger.handlers = []
-    handler = logging.FileHandler(config.LOG_PATH / 'method.log')
+    handler = logging.FileHandler(
+        config.LOG_PATH / 'method.log', encoding='utf-8')
     handler.setLevel(logging.DEBUG)
     logger.addHandler(handler)
 
 
 def main(args):
+    # from Bio import pairwise2
+    # dna1 = 'alamakotaipsaalenielubiniczegoztegocojejoladala'
+    # phon = 'lamkora'
+    # position=0
+    # alignment = pairwise2.align.globalmc(
+    #     (dna1[position:])[::-1],
+    #     phon[::-1],
+    #     6/len(phon),
+    #     -6/len(phon),
+    #     functools.partial(gap_function, w1=-0.5, w2=-0.01),
+    #     functools.partial(
+    #         gap_function_no_start_penalty, w1=-2, w2=-0.3),
+    #     one_alignment_only=True
+    # )[0]
+    # print(pairwise2.format_alignment(*alignment))
+    # print(alignment)
+    # id = next(i for (i, e) in enumerate(alignment.seqB) if e != "-")
+    # print(len(dna1)-id)
+    # return
+
     train_data, test_data_X, test_data_Y = train_test_data.get_train_test_data(
         pathlib.Path(".\\data_conf\\mgr\\mama\\wav_files"),
         pathlib.Path(".\\data_conf\\mgr\\mama\\opisy"),
-        20)
+        20,
+        moje=pathlib.Path(".\\data_conf\\mgr\\moje_nagrania"),
+        dont=False)
 
     ASR = ASR_main_flow.ASR(train_data, 10000)
 
@@ -104,6 +129,18 @@ def main(args):
         f_logger.info(f'fix: {metrics.wer(reference, fixed)}')
 
 
+def gap_function_no_start_penalty(x, y, w1, w2):
+    if x == 0:
+        return 0
+    return gap_function(x, y, w1, w2)
+
+
+def gap_function(x, y, w1, w2):  # x is gap position in seq, y is gap length
+    if y == 0:  # No gap
+        return 0
+    return w1 + (y-1)*w2
+
+
 if __name__ == '__main__':
     setup_loggers()
     args = parse_args()
@@ -112,4 +149,3 @@ if __name__ == '__main__':
     # f_logger.info('aaa')
     # input()
     main(args)
-

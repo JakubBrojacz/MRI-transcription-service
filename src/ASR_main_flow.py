@@ -6,6 +6,9 @@ import data_loading.document_importer as document_importer
 import phonemic
 import data_loading.recording_storage as recording_storage
 import method_simple
+import method_advanced
+import method_advanced2
+import method_advanced3
 import utils
 
 
@@ -25,11 +28,11 @@ class ASR:
     def run(self, sound_file):
         track = recording_storage.Recording(sound_file).process(self.g2p)
 
-        fixed = method_simple.test_with_params(track.hypothesis_phon,
-                                              self.g2p,
-                                              self.l1,
-                                              track,
-                                              -1,
-                                              -0.3,
-                                              self.model)
+        fixed = method_advanced3.test_with_params(track.hypothesis_phon,
+                                                  self.g2p,
+                                                  self.l1,
+                                                  track,
+                                                  -1,
+                                                  -0.3,
+                                                  self.model)
         return track.hypothesis, fixed

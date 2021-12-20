@@ -1,6 +1,8 @@
 from nltk.util import ngrams
+import nltk
 import json
 import pickle
+import numpy as np
 
 import config
 
@@ -10,6 +12,8 @@ class NGramModel:
         self.max_n = max_n
         self.model = {}
         self.model_kwords = set()
+        self.word_list = []
+        self.word_to_id = {}
 
     @classmethod
     def load(cls, filename):
@@ -34,7 +38,7 @@ class NGramModel:
 
     def add_document(self, content):
         splitted = content.split()
-        # splitted = ['<START>' for i in range(self.max_n)] + splitted
+        splitted = ['<START>'] + splitted
         for i in range(1, self.max_n+1):
             igrams = ngrams(splitted, i)
             for igram in igrams:
@@ -70,7 +74,7 @@ class NGramModel:
     def add_document_skip_short_words(self, content):
         splitted = content.split()
         min_entity_len = 7  # skip words with lower number of signs than this
-        splitted = [word for word in splitted if len(word)>=min_entity_len]
+        splitted = [word for word in splitted if len(word) >= min_entity_len]
         for i in range(1, self.max_n+1):
             igrams = ngrams(splitted, i)
             for igram in igrams:
@@ -78,6 +82,13 @@ class NGramModel:
         kgrams = ngrams(splitted, self.max_n)
         for kgram in kgrams:
             self.model_kwords.add(' '.join(kgram))
+
+    def compile(self):
+        self.word_list = list(self.model)
+        self.word_to_id = {
+            word: idx
+            for idx, word in enumerate(self.word_list)
+        }
 
     def predict(self, words):
         result = {}
@@ -95,5 +106,25 @@ class NGramModel:
                 if pred_word == 'NUM':
                     continue
                 result[pred_word] = result.get(
-                    pred_word, 0) + tmp_model[pred_word]['NUM']*i
+                    pred_word, 0) + (tmp_model[pred_word]['NUM']+i)*i*i
+        return result
+
+    def ngram_dict(self, words):
+        tmp_model = self.model
+        for w in range(words):
+            if w not in tmp_model:
+                return None
+            tmp_model = tmp_model[w]
+        return tmp_model
+
+    def predict_backoff(self, words):
+        result = {}
+
+        
+
+        result_array = np.array([
+            1 for i in self.model
+        ])
+        for word in result:
+
         return result

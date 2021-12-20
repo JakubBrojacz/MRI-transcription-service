@@ -14,7 +14,7 @@ import metrics
 f_logger = logging.getLogger("Method_Logger")
 
 
-def test_with_params1(dna1, g2p, l1, track, reference, param1, param2, f_out, save_kmer_score=False, model=None):
+def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
     '''
     param1 - break start (-1)
     param2 - break continue (-0.3)
@@ -36,11 +36,7 @@ def test_with_params1(dna1, g2p, l1, track, reference, param1, param2, f_out, sa
     tmp_l = list(l1)
     tmp_l.sort(key=lambda x: kgram_score[x][1], reverse=True)
 
-    used_kgrams = [""]
-    last_used = 1
     hypo = track.hypothesis_phon
-    ids = [0 for sign in hypo]
-    start, end = 0, 0
 
     kgram = tmp_l[0]
     alignment, score = kgram_score[kgram]
@@ -51,38 +47,70 @@ def test_with_params1(dna1, g2p, l1, track, reference, param1, param2, f_out, sa
     hypo = dna1
 
     # forward
-    while end < len(hypo):
-        # print(fixed)
-        candidates = model.predict(fixed[-5:])
-        # print(candidates)
-        for c in candidates:
-            alignment = pairwise2.align.globalmc(
-                (hypo[end:])[::-1],
-                g2p.transliterate(c).lower()[::-1],
-                6/len(c),
-                -6/len(c),
-                functools.partial(gap_function, w1=-0.5, w2=-0.01),
-                functools.partial(
-                    gap_function_no_start_penalty, w1=-2, w2=-0.3),
-                one_alignment_only=True
-            )[0]
-            # print(alignment)
-            candidates[c] = alignment
-        # print(candidates)
-        candidate = max(list(candidates), key=lambda c: candidates[c].score)
-        print(fixed)
-        print(candidate)
-        print(candidates[candidate])
-        fixed.append(candidate)
-        # print(candidates[candidate])
-        input()
-        end += len(candidates[candidate].seqB) - \
-            re.search(r'[^-]', candidates[candidate].seqB).start()
+    with tqdm(total=len(hypo)) as pbar:
+        pbar.update(end)
+        while end < len(hypo):
+            # print(fixed)
+            candidates = model.predict(fixed[-5:])
+            # print(candidates)
+            for c in candidates:
+                alignment = pairwise2.align.globalmc(
+                    (hypo[end:])[::-1],
+                    g2p.transliterate(c).lower()[::-1],
+                    6/len(c),
+                    -6/len(c),
+                    functools.partial(gap_function, w1=-0.5, w2=-0.01),
+                    functools.partial(
+                        gap_function_no_start_penalty, w1=-2, w2=-0.3),
+                    one_alignment_only=True
+                )[0]
+                # print(alignment)
+                candidates[c] = alignment
+            # print(candidates)
+            if len(candidates) == 0:
+                break
+            candidate = max(list(candidates), key=lambda c: candidates[c].score)
+            fixed.append(candidate)
+            # print(candidates[candidate])
+            step = len(candidates[candidate].seqB) - \
+                re.search(r'[^-]', candidates[candidate].seqB).start()
+            pbar.update(step)
+            end += step
+
+    # backward
+    with tqdm(total=len(hypo)) as pbar:
+        pbar.update(end)
+        while end < len(hypo):
+            # print(fixed)
+            candidates = model.predict(fixed[-5:])
+            # print(candidates)
+            for c in candidates:
+                alignment = pairwise2.align.globalmc(
+                    (hypo[end:])[::-1],
+                    g2p.transliterate(c).lower()[::-1],
+                    6/len(c),
+                    -6/len(c),
+                    functools.partial(gap_function, w1=-0.5, w2=-0.01),
+                    functools.partial(
+                        gap_function_no_start_penalty, w1=-2, w2=-0.3),
+                    one_alignment_only=True
+                )[0]
+                # print(alignment)
+                candidates[c] = alignment
+            # print(candidates)
+            if len(candidates) == 0:
+                break
+            candidate = max(list(candidates), key=lambda c: candidates[c].score)
+            fixed.append(candidate)
+            # print(candidates[candidate])
+            step = len(candidates[candidate].seqB) - \
+                re.search(r'[^-]', candidates[candidate].seqB).start()
+            pbar.update(step)
+            end += step
 
     fixed = ' '.join(fixed)
+    return fixed
 
-    f_logger.info("FIXED: {fixed}")
-    f_logger.info(f'WER after fixing: {metrics.wer(reference, fixed)}')
 
 
 # x is gap position in seq, y is gap length
