@@ -117,14 +117,14 @@ class NGramModel:
             tmp_model = tmp_model[w]
         return tmp_model
 
-    def predict_backoff(self, words):
-        result = {}
+    # def predict_backoff(self, words):
+    #     result = {}
 
         
 
-        result_array = np.array([
-            1 for i in self.model
-        ])
-        for word in result:
+    #     result_array = np.array([
+    #         1 for i in self.model
+    #     ])
+    #     for word in result:
 
-        return result
+    #     return result
