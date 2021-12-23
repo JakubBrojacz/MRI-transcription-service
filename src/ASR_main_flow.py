@@ -9,6 +9,7 @@ import method_simple
 import method_advanced
 import method_advanced2
 import method_advanced3
+import method_advanced4
 import utils
 
 
@@ -28,7 +29,7 @@ class ASR:
     def run(self, sound_file):
         track = recording_storage.Recording(sound_file).process(self.g2p)
 
-        fixed = method_advanced3.test_with_params(track.hypothesis_phon,
+        fixed = method_advanced4.test_with_params(track.hypothesis_phon,
                                                   self.g2p,
                                                   self.l1,
                                                   track,

@@ -88,25 +88,6 @@ def setup_loggers():
 
 
 def main(args):
-    # from Bio import pairwise2
-    # dna1 = 'alamakotaipsaalenielubiniczegoztegocojejoladala'
-    # phon = 'lamkora'
-    # position=0
-    # alignment = pairwise2.align.globalmc(
-    #     (dna1[position:])[::-1],
-    #     phon[::-1],
-    #     6/len(phon),
-    #     -6/len(phon),
-    #     functools.partial(gap_function, w1=-0.5, w2=-0.01),
-    #     functools.partial(
-    #         gap_function_no_start_penalty, w1=-2, w2=-0.3),
-    #     one_alignment_only=True
-    # )[0]
-    # print(pairwise2.format_alignment(*alignment))
-    # print(alignment)
-    # id = next(i for (i, e) in enumerate(alignment.seqB) if e != "-")
-    # print(len(dna1)-id)
-    # return
 
     train_data, test_data_X, test_data_Y = train_test_data.get_train_test_data(
         pathlib.Path(".\\data_conf\\mgr\\mama\\wav_files"),

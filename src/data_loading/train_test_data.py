@@ -21,7 +21,9 @@ def get_train_test_data(sound_path, doc_path, num_of_test_entries, moje=None, do
     train_data = [
         file for file in all_data if file.stem not in test_data_stems]
     if dont:
-        train_data = [train_data[0]]
+        train_data = [test_data_Y[0]]
         test_data_X = [test_data_X[0]]
         test_data_Y = [test_data_Y[0]]
     return train_data, test_data_X, test_data_Y
+
+
