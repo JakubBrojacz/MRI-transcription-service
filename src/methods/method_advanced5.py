@@ -1,20 +1,12 @@
 import logging
 import itertools
-import json
-import re
-import time
 import functools
-import enum
 
 from tqdm import tqdm
 from Bio import pairwise2
 import numpy as np
-from hmmlearn import hmm
 
-import config
-import metrics
 from my_pairwise import alignment_utils
-import test_utils
 
 
 f_logger = logging.getLogger("Method_Logger")

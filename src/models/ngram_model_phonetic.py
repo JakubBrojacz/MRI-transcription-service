@@ -26,10 +26,31 @@ class NGramModel:
         return model
 
     def save(self, filename):
-        print(f'saving model from {filename}')
+        print(f'saving model to {filename}')
         with open(config.TMP_PATH / filename, 'wb') as f:
             model = pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
         return model
+
+    def __getstate__(self):
+        """Return state values to be pickled."""
+        return (
+            self.model,
+            self.model_kwords,
+            self.word_list,
+            self.word_to_id,
+            self.pronounciation_dictionary,
+            self.reverse_pronounciation_dictionary
+        )
+
+    def __setstate__(self, state):
+        """Restore state from the unpickled state values."""
+        self.model, \
+            self.model_kwords,\
+            self.word_list,\
+            self.word_to_id,\
+            self.pronounciation_dictionary,\
+            self.reverse_pronounciation_dictionary\
+            = state
 
     def add_phrase(self, phrase):
         model_step = self.model
@@ -91,7 +112,6 @@ class NGramModel:
             tmp_model = tmp_model[w]
         return tmp_model
 
-
     def get_probability(self, precedings, word):
         tmp_model = self.model
         for tmp_w in precedings.split()[-4:]:
@@ -105,11 +125,8 @@ class NGramModel:
         ))
         return 0.02 + (tmp_model[word]["NUM"]/sum_prob)
 
-
     # def predict_backoff(self, words):
     #     result = {}
-
-        
 
     #     result_array = np.array([
     #         1 for i in self.model

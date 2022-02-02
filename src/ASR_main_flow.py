@@ -1,17 +1,17 @@
 import logging
 import random
 
-import ngram_model
-import ngram_model_phonetic
+import models.ngram_model as ngram_model
+import models.ngram_model_phonetic as ngram_model_phonetic
 import data_loading.document_importer as document_importer
 import phonemic
 import data_loading.recording_storage as recording_storage
-import method_simple
-import method_advanced
-import method_advanced2
-import method_advanced3
-import method_advanced4
-import method_advanced6
+import methods.method_simple as method_simple
+import methods.method_advanced as method_advanced
+import methods.method_advanced2 as method_advanced2
+import methods.method_advanced3 as method_advanced3
+import methods.method_advanced4 as method_advanced4
+import methods.method_advanced6 as method_advanced6
 import utils
 import config
 
