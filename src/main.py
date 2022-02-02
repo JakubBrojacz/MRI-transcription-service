@@ -1,31 +1,16 @@
 import argparse
-import itertools
 import pathlib
-import unicodedata
-import json
 import random
-import functools
 import sys
-import os
-import re
 import logging
 
 
-import pandas as pd
-from tqdm import tqdm
-from Bio import pairwise2
-
-import data_loading.sound_preprocessing as sound_preprocessing
-import julius
 import config
-import ngram_model
 import data_loading.document_importer as document_importer
-import phonemic
-import data_loading.recording_storage as recording_storage
 import metrics
 import data_loading.train_test_data as train_test_data
-import method_simple
 import ASR_main_flow
+
 
 f_logger = logging.getLogger("Main_File_Logger")
 c_logger = logging.getLogger("Main_Console_Logger")
@@ -43,9 +28,8 @@ def parse_args():
                         help='Input audio file. Format: m4a',
                         type=pathlib.Path)
     parser.add_argument('--model', '-M',
-                        default=None,
-                        help='Input reports',
-                        type=pathlib.Path)
+                        action='store_true',
+                        help='Input reports')
     parser.add_argument('--model_input',
                         default=None,
                         help='Input reports',
@@ -92,11 +76,11 @@ def main(args):
     train_data, test_data_X, test_data_Y = train_test_data.get_train_test_data(
         pathlib.Path(".\\data_conf\\mgr\\mama\\wav_files"),
         pathlib.Path(".\\data_conf\\mgr\\mama\\opisy"),
-        20,
+        3,
         moje=pathlib.Path(".\\data_conf\\mgr\\moje_nagrania"),
         dont=False)
 
-    ASR = ASR_main_flow.ASR(train_data, 10000)
+    ASR = ASR_main_flow.ASR(train_data, 100000, args.model)
 
     for X, Y in zip(test_data_X, test_data_Y):
         f_logger.info(f'processing: {X.stem}')
@@ -110,23 +94,8 @@ def main(args):
         f_logger.info(f'fix: {metrics.wer(reference, fixed)}')
 
 
-def gap_function_no_start_penalty(x, y, w1, w2):
-    if x == 0:
-        return 0
-    return gap_function(x, y, w1, w2)
-
-
-def gap_function(x, y, w1, w2):  # x is gap position in seq, y is gap length
-    if y == 0:  # No gap
-        return 0
-    return w1 + (y-1)*w2
-
-
 if __name__ == '__main__':
     setup_loggers()
     args = parse_args()
     random.seed(1375)
-    # print(f_logger.handlers[0])
-    # f_logger.info('aaa')
-    # input()
     main(args)
