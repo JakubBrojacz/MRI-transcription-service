@@ -92,7 +92,6 @@ class NGramModel:
 
     def predict(self, words):
         result = {}
-
         for i in range(1, self.max_n):
             if len(words) < i:
                 return result
@@ -116,6 +115,21 @@ class NGramModel:
                 return None
             tmp_model = tmp_model[w]
         return tmp_model
+
+
+    def get_probability(self, precedings, word):
+        tmp_model = self.model
+        for tmp_w in precedings.split()[-4:]:
+            tmp_model = tmp_model.get(tmp_w, {})
+        if word not in tmp_model:
+            return 0
+        sum_prob = sum((
+            tmp_model[tmp_w]["NUM"]
+            for tmp_w in tmp_model
+            if tmp_w != "NUM"
+        ))
+        return 0.02 + (tmp_model[word]["NUM"]/sum_prob)
+
 
     # def predict_backoff(self, words):
     #     result = {}
