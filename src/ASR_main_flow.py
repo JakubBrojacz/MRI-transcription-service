@@ -6,12 +6,13 @@ import models.ngram_model_phonetic as ngram_model_phonetic
 import data_loading.document_importer as document_importer
 import phonemic
 import data_loading.recording_storage as recording_storage
-import methods.method_simple as method_simple
-import methods.method_advanced as method_advanced
-import methods.method_advanced2 as method_advanced2
-import methods.method_advanced3 as method_advanced3
-import methods.method_advanced4 as method_advanced4
-import methods.method_advanced6 as method_advanced6
+import methods.method_simple as method
+import methods.method_advanced as method
+import methods.method_advanced2 as method
+import methods.method_advanced3 as method
+import methods.method_advanced4 as method
+import methods.method_advanced6 as method
+import methods.method_advanced7 as method
 import utils
 import config
 
@@ -21,7 +22,8 @@ class ASR:
         self.g2p = phonemic.G2P()
 
         if load_model:
-            self.model = ngram_model_phonetic.NGramModel.load(config.MODEL_PATH)
+            self.model = ngram_model_phonetic.NGramModel.load(
+                config.MODEL_PATH)
         else:
             self.model = ngram_model_phonetic.NGramModel(self.g2p, 5)
             model_input = document_importer.import_file_list(training_data)
@@ -36,11 +38,11 @@ class ASR:
     def run(self, sound_file):
         track = recording_storage.Recording(sound_file).process(self.g2p)
 
-        fixed = method_advanced6.test_with_params(track.hypothesis_phon,
-                                                  self.g2p,
-                                                  self.l1,
-                                                  track,
-                                                  -1,
-                                                  -0.3,
-                                                  self.model)
+        fixed = method.test_with_params(track.hypothesis_phon,
+                                        self.g2p,
+                                        self.l1,
+                                        track,
+                                        -1,
+                                        -0.3,
+                                        self.model)
         return track.hypothesis, fixed
