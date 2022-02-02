@@ -4,6 +4,7 @@ import pathlib
 ROOT_PATH = pathlib.Path(__file__).absolute().parent.parent
 TMP_PATH = ROOT_PATH / 'tmp'
 LOG_PATH = ROOT_PATH / 'logs'
+MODEL_PATH = TMP_PATH / 'model.pkl'
 
 
 JULIUS_PATH = ROOT_PATH / 'julius'
