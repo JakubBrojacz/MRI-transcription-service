@@ -30,10 +30,17 @@ def parse_args():
     parser.add_argument('--model', '-M',
                         action='store_true',
                         help='Input reports')
+    parser.add_argument('--moje',
+                        action='store_true',
+                        help='Use my recordings as testset')
     parser.add_argument('--model_input',
                         default=None,
                         help='Input reports',
                         type=pathlib.Path)
+    parser.add_argument('--test_size', '-T',
+                        default=20,
+                        help='Input reports',
+                        type=int)
     args = parser.parse_args()
     return args
 
@@ -72,12 +79,16 @@ def setup_loggers():
 
 
 def main(args):
+    if args.moje:
+        moje_path = pathlib.Path(".\\data_conf\\mgr\\moje_nagrania")
+    else:
+        moje_path = None
 
     train_data, test_data_X, test_data_Y = train_test_data.get_train_test_data(
         pathlib.Path(".\\data_conf\\mgr\\mama\\wav_files"),
         pathlib.Path(".\\data_conf\\mgr\\mama\\opisy"),
-        3,
-        moje=pathlib.Path(".\\data_conf\\mgr\\moje_nagrania"),
+        args.test_size,
+        moje=moje_path,
         dont=False)
 
     ASR = ASR_main_flow.ASR(train_data, 100000, args.model)

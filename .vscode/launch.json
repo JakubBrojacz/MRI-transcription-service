@@ -11,7 +11,7 @@
             "program": ".\\src\\main.py",
             "args": [
                 "--model",
-                "a.pkl"
+                "--moje"
             ],
             "console": "integratedTerminal"
         },

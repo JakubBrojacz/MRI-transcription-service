@@ -34,6 +34,7 @@ class NGramModel:
     def __getstate__(self):
         """Return state values to be pickled."""
         return (
+            self.max_n,
             self.model,
             self.model_kwords,
             self.word_list,
@@ -44,7 +45,8 @@ class NGramModel:
 
     def __setstate__(self, state):
         """Restore state from the unpickled state values."""
-        self.model, \
+        self.max_n,\
+            self.model,\
             self.model_kwords,\
             self.word_list,\
             self.word_to_id,\
