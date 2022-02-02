@@ -3,6 +3,8 @@ julius/
 ffmpeg/
 data_conf/
 tmp/
+profiling/profile_stats
+profiling/stats_readable.txt
 
 
 # Byte-compiled / optimized / DLL files

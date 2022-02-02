@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug main 2",
+            "type": "python",
+            "request": "launch",
+            "program": ".\\src\\main.py",
+            "args": [
+                "--model",
+                "a.pkl"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Debug main",
             "type": "python",
             "request": "launch",
