@@ -45,14 +45,22 @@ def parse_args():
     return args
 
 
-def setup_loggers():
+def setup_loggers(args):
+    experiment_no = random.randint(100000, 999999)
+    log_path = config.LOG_PATH / f'experiment_{experiment_no}'
+    log_path.mkdir(parents=True, exist_ok=False)
+    initial_log_message = \
+        f"Experiment {experiment_no}: testing {ASR_main_flow.method}\n"\
+        f"args: {args}"
+
     logger = logging.getLogger("Main_File_Logger")
     logger.setLevel(logging.DEBUG)
     # logger.handlers = []
     handler = logging.FileHandler(
-        config.LOG_PATH / 'main.log', encoding='utf-8')
+        log_path / 'main.log', encoding='utf-8')
     handler.setLevel(logging.DEBUG)
     logger.addHandler(handler)
+    logger.info(initial_log_message)
 
     logger = logging.getLogger("Main_Console_Logger")
     logger.setLevel(logging.DEBUG)
@@ -60,22 +68,25 @@ def setup_loggers():
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)
     logger.addHandler(handler)
+    logger.info(initial_log_message)
 
     logger = logging.getLogger("Time_Logger")
     logger.setLevel(logging.DEBUG)
     # logger.handlers = []
     handler = logging.FileHandler(
-        config.LOG_PATH / 'time.log', encoding='utf-8')
+        log_path / 'time.log', encoding='utf-8')
     handler.setLevel(logging.DEBUG)
     logger.addHandler(handler)
+    logger.info(initial_log_message)
 
     logger = logging.getLogger("Method_Logger")
     logger.setLevel(logging.DEBUG)
     # logger.handlers = []
     handler = logging.FileHandler(
-        config.LOG_PATH / 'method.log', encoding='utf-8')
+        log_path / 'method.log', encoding='utf-8')
     handler.setLevel(logging.DEBUG)
     logger.addHandler(handler)
+    logger.info(initial_log_message)
 
 
 def main(args):
@@ -106,7 +117,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    setup_loggers()
     args = parse_args()
+    setup_loggers(args)
     random.seed(1375)
     main(args)
