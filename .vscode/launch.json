@@ -5,12 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: conf table creation",
+            "type": "python",
+            "request": "launch",
+            "program": ".\\src\\conf_table_creator.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Debug main 2",
             "type": "python",
             "request": "launch",
             "program": ".\\src\\main.py",
             "args": [
-                "--model",
+                // "--model",
                 "--moje"
             ],
             "console": "integratedTerminal"
