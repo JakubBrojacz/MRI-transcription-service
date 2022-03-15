@@ -7,12 +7,17 @@ from Bio import pairwise2
 import numpy as np
 
 
+# dynamic programming , based on advanced1, I think the best one at the moment
+# reduce word to 10 first signs
+
+# SOMETHING IS BROKEN
+
+
 f_logger = logging.getLogger("Method_Logger")
 
 
 def get_last_word(words, transitions, word_id, column_id, num_of_words):
     fixed_ids = [word_id]
-
 
     for trans in transitions[1:column_id][::-1]:
         fixed_ids.append(trans[fixed_ids[-1]])

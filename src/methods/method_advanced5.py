@@ -9,6 +9,9 @@ import numpy as np
 from my_pairwise import alignment_utils
 
 
+# NOT WORKING
+
+
 f_logger = logging.getLogger("Method_Logger")
 
 

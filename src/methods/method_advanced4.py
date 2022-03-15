@@ -9,6 +9,9 @@ import numpy as np
 from my_pairwise import alignment_utils
 
 
+# try to get all alignmnets of method 3 at once. Doesn't work, can't reduce part of matching hypothesis to first 10 letters 
+
+
 f_logger = logging.getLogger("Method_Logger")
 
 

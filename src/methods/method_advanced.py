@@ -11,6 +11,9 @@ import config
 import metrics
 
 
+# get next word based on probability after previous 4 words and alignment of next word at the beginning of hypothesis 
+
+
 f_logger = logging.getLogger("Method_Logger")
 
 

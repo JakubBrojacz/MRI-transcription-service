@@ -9,6 +9,9 @@ import config
 import metrics
 
 
+# Method described in paper - alignmnet of 5-grams into whole hypothesis
+
+
 f_logger = logging.getLogger("Method_Logger")
 
 

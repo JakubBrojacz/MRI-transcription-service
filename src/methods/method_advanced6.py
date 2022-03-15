@@ -4,6 +4,8 @@ from tqdm import tqdm
 from Bio import pairwise2
 import numpy as np
 
+# get next word as probability from last words * alignment score, quite fast
+
 
 f_logger = logging.getLogger("Method_Logger")
 
