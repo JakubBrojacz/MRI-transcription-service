@@ -34,8 +34,8 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
     param1 - break start (-1)
     param2 - break continue (-0.3)
     '''
-    param1 = -4
-    param2 = -1
+    param1 = -7
+    param2 = -5
 
     l1 = [
         kgram

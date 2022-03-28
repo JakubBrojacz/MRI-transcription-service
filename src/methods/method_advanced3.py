@@ -40,11 +40,10 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
     # m1, dna1 = test_utils.prepare_test_data()
     # model.model = m1
 
-
     f_logger.info("start method")
     np.random.seed(42)
 
-    words = list(model.model)
+    words = list(model.reverse_pronounciation_dictionary)
     word_to_id = {
         word: idx
         for idx, word in enumerate(words)
@@ -89,14 +88,15 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
         for word_id, word in enumerate(words):  # iterating over current column
 
             # prediction = model.predict([word])
-            prediction = model.predict(get_last_word(words, transitions, word_id, position, 5))
+            prediction = model.predict(get_last_word(
+                words, transitions, word_id, position, 5))
             pred_array = np.array([
-                1 for _ in words
+                0.1 for _ in words
             ])
             for next_word in prediction:
                 pred_array[word_to_id[next_word]] = prediction[next_word]
             pred_array = pred_array / np.sum(pred_array)
-            
+
             if word_len[word_id] > 1:
                 pred_array *= 0.2
                 pred_array[word_id] = pred_array[word_id]+0.8
@@ -105,7 +105,8 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
                 pred_array[word_id] = pred_array[word_id]+0.6
 
             for next_word_id, next_word in enumerate(words):
-                word_prediction = pred_array[next_word_id] * last_column[word_id]
+                word_prediction = pred_array[next_word_id] * \
+                    last_column[word_id]
                 if last_column[word_id] < 0:
                     word_prediction = 0
                 next_word_id = word_to_id[next_word]
@@ -114,11 +115,11 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
                     transitions[position][next_word_id] = word_id
 
         for word_id, word in enumerate(words):  # iterating over next column
-            if next_column[word_id] == 0:
+            if next_column[word_id] == 0 or word == '':
                 word_len[word_id] = 0
                 continue
-            phon = g2p.transliterate(word).lower()[:10]
-            alignment_goal = dna1[position:position+10]
+            phon = word[:8]
+            alignment_goal = dna1[position:position+8]
             # phon = word
             alignment = pairwise2.align.globalmc(
                 alignment_goal[::-1],
@@ -193,12 +194,11 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
 
     # print(fixed_ids)
     fixed = ' '.join(
-        words[idx]
+        model.reverse_pronounciation_dictionary[words[idx]]
         for idx, _ in itertools.groupby(fixed_ids[::-1])
     )
     print(fixed)
     return fixed
-
 
 
 # x is gap position in seq, y is gap length

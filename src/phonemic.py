@@ -16,6 +16,9 @@ class G2P:
         }
         self.epi = epitran.Epitran('pol-Latn')
 
+    def preprocess(self, s):
+        return s.replace('<START>', '')
+
     def simplify(self, s):
         for key in self.simplification_table:
             s = s.replace(key, self.simplification_table[key])
@@ -24,5 +27,6 @@ class G2P:
         return "".join(s.split())
 
     def transliterate(self, s):
-        output_phon = self.epi.transliterate(s)
+        preprocessed = self.preprocess(s)
+        output_phon = self.epi.transliterate(preprocessed)
         return self.simplify(output_phon)

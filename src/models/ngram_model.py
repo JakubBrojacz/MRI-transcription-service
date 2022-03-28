@@ -31,6 +31,8 @@ class NGramModel:
     def add_phrase(self, phrase):
         model_step = self.model
         for word in phrase:
+            if word.strip() == '':
+                continue
             if word not in model_step:
                 model_step[word] = {}
             model_step = model_step[word]
@@ -116,7 +118,6 @@ class NGramModel:
             tmp_model = tmp_model[w]
         return tmp_model
 
-
     def get_probability(self, precedings, word):
         tmp_model = self.model
         for tmp_w in precedings.split()[-4:]:
@@ -130,11 +131,8 @@ class NGramModel:
         ))
         return 0.02 + (tmp_model[word]["NUM"]/sum_prob)
 
-
     # def predict_backoff(self, words):
     #     result = {}
-
-        
 
     #     result_array = np.array([
     #         1 for i in self.model

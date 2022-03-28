@@ -17,8 +17,8 @@
             "request": "launch",
             "program": ".\\src\\main.py",
             "args": [
-                // "--model",
-                "--moje"
+                "--model",
+                "--skip"
             ],
             "console": "integratedTerminal"
         },

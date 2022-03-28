@@ -41,14 +41,20 @@ def parse_args():
                         default=20,
                         help='Input reports',
                         type=int)
+    parser.add_argument('--skip', '-S',
+                        action='store_true',
+                        help='Skip saving logs')
     args = parser.parse_args()
     return args
 
 
 def setup_loggers(args):
-    experiment_no = random.randint(100000, 999999)
+    if args.skip:
+        experiment_no = 1
+    else:
+        experiment_no = random.randint(100000, 999999)
     log_path = config.LOG_PATH / f'experiment_{experiment_no}'
-    log_path.mkdir(parents=True, exist_ok=False)
+    log_path.mkdir(parents=True, exist_ok=True)
     initial_log_message = \
         f"Experiment {experiment_no}: testing {ASR_main_flow.method}\n"\
         f"args: {args}"
