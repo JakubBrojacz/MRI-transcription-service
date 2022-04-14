@@ -29,7 +29,7 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
     kgram_score = {}
 
     for kgram in tqdm(l1):
-        dna2 = ''.join(g2p.transliterate(kgram).lower().split())
+        dna2 = ''.join(kgram.lower().split())
         alignment = pairwise2.align.localxs(
             dna1, dna2, param1, param2, one_alignment_only=True)[0]
         score = alignment.score / len(dna2)
@@ -59,7 +59,7 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
             for c in candidates:
                 alignment = pairwise2.align.globalmc(
                     (hypo[end:])[::-1],
-                    g2p.transliterate(c).lower()[::-1],
+                    c[::-1],
                     6/len(c),
                     -6/len(c),
                     functools.partial(gap_function, w1=-0.5, w2=-0.01),
@@ -90,7 +90,7 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
             for c in candidates:
                 alignment = pairwise2.align.globalmc(
                     (hypo[end:])[::-1],
-                    g2p.transliterate(c).lower()[::-1],
+                    c[::-1],
                     6/len(c),
                     -6/len(c),
                     functools.partial(gap_function, w1=-0.5, w2=-0.01),
@@ -111,7 +111,10 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
             pbar.update(step)
             end += step
 
-    fixed = ' '.join(fixed)
+    fixed = ' '.join(
+        model.reverse_pronounciation_dictionary[word]
+        for word in fixed
+    )
     return fixed
 
 

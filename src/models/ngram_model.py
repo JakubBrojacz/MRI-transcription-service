@@ -96,7 +96,7 @@ class NGramModel:
         result = {}
         for i in range(1, self.max_n):
             if len(words) < i:
-                return result
+                break
             tmp_model = self.model
             for j in range(i):
                 if words[-i+j] not in tmp_model:
@@ -106,8 +106,16 @@ class NGramModel:
             for pred_word in tmp_model:
                 if pred_word == 'NUM':
                     continue
-                result[pred_word] = result.get(
-                    pred_word, 0) + (tmp_model[pred_word]['NUM']+i)*i*i
+                result[pred_word] = result.get(pred_word, 0) + \
+                    tmp_model[pred_word]['NUM']
+            prob_sum = sum((
+                result[word]
+                for word in result
+            ))
+            if prob_sum == 0:
+                continue
+            for word in result:
+                result[word] /= prob_sum
         return result
 
     def ngram_dict(self, words):

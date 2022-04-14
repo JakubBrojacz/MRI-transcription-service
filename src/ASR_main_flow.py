@@ -9,11 +9,15 @@ import data_loading.recording_storage as recording_storage
 # import methods.method_simple as method
 # import methods.method_advanced as method
 # import methods.method_advanced2 as method
-import methods.method_advanced3 as method
+# import methods.method_advanced3 as method
 # import methods.method_advanced4 as method
 # import methods.method_advanced6 as method
 # import methods.method_advanced7 as method
 # import methods.method_advanced8 as method
+# import methods.method_advanced9 as method
+# import methods.method_advanced10 as method
+# import methods.method_advanced11 as method
+import methods.method_advanced12 as method
 # import methods.method_simple1 as method
 import utils
 import config

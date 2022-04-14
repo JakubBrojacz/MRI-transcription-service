@@ -18,7 +18,8 @@
             "program": ".\\src\\main.py",
             "args": [
                 "--model",
-                "--skip"
+                "--skip",
+                "--moje"
             ],
             "console": "integratedTerminal"
         },

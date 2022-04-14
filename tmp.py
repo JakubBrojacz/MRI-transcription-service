@@ -6,7 +6,7 @@ import math
 X = []
 Y = []
 hyps = []
-with open('logs/main_simple.log') as f:
+with open('logs/experiment_200942_fixedxd/main.log', encoding='utf-8') as f:
     for line in f:
         if line.startswith('hyp: ') and line[5].isdigit():
             X.append(line[5:-1])
@@ -31,21 +31,22 @@ print('std')
 print(np.std(X))
 print('fix')
 print('mean')
-print(np.mean(Y-0.05))
+print(np.mean(Y))
 print('std')
-print(np.std(Y-0.05))
+print(np.std(Y))
 print('diff')
 print('mean')
-print(np.mean(Y-0.05-X))
+print(np.mean(Y-X))
 print('std')
-print(np.std(Y-0.05-X))
+print(np.std(Y-X))
 
 
 def draw_plot(x1, title, xlabel, step):
     min_1 = math.floor(min(x1)*(1/step))/(1/step)
     max_1 = math.ceil(max(x1)*(1/step))/(1/step)
-    bins = int((max_1 - min_1)/step)+1
     print(min_1)
+    print(max_1)
+    bins = int((max_1 - min_1)/step)
 
     plt.hist(x1, range = [min_1, max_1], bins=bins,
         ec='black')
@@ -64,15 +65,15 @@ draw_plot([
     0.025)
 
 draw_plot([
-    y-0.05
+    y
     for x, y, h in zip(X, Y, hyps)
     if len(h) > 200],
-    "WER of fixed output of post-processing system",
+    "WER of fixed output of post-processing system - currect iteration",
     "WER(fixed)",
     0.1)
 
 draw_plot([
-    y-0.05-x
+    y-x
     for x, y, h in zip(X, Y, hyps)
     if len(h) > 200],
     "Change in WER between ASR hypothesis and fixed output",
