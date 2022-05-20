@@ -5,6 +5,7 @@ data_conf/
 tmp/
 profiling/profile_stats
 profiling/stats_readable.txt
+plots/
 
 
 # Byte-compiled / optimized / DLL files
