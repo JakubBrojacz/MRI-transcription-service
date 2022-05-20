@@ -44,6 +44,10 @@ def parse_args():
     parser.add_argument('--skip', '-S',
                         action='store_true',
                         help='Skip saving logs')
+    parser.add_argument('--desc',
+                        default="",
+                        help='Appended to experiment name in logs',
+                        type=str)
     args = parser.parse_args()
     return args
 
@@ -53,7 +57,7 @@ def setup_loggers(args):
         experiment_no = 1
     else:
         experiment_no = random.randint(100000, 999999)
-    log_path = config.LOG_PATH / f'experiment_{experiment_no}'
+    log_path = config.LOG_PATH / f'experiment_{experiment_no}{args.desc}'
     log_path.mkdir(parents=True, exist_ok=True)
     initial_log_message = \
         f"Experiment {experiment_no}: testing {ASR_main_flow.method}\n"\
@@ -96,16 +100,11 @@ def setup_loggers(args):
 
 
 def main(args):
-    if args.moje:
-        moje_path = pathlib.Path(".\\data_conf\\mgr\\moje_nagrania")
-    else:
-        moje_path = None
-
     train_data, test_data_X, test_data_Y = train_test_data.get_train_test_data(
-        pathlib.Path(".\\data_conf\\mgr\\mama\\wav_files"),
-        pathlib.Path(".\\data_conf\\mgr\\mama\\opisy"),
+        config.WAV_ORIGINAL_PATH,
+        config.TRANSCIPTIONS_PATH,
         args.test_size,
-        moje=moje_path,
+        moje=args.moje,
         dont=False)
 
     ASR = ASR_main_flow.ASR(train_data, 100000, args.model)

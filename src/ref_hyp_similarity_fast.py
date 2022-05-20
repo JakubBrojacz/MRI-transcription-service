@@ -49,6 +49,7 @@ def main(args):
 
     min_mismatch_to_match_ratio = 3
     min_window_size = 30
+    min_seq_size = 20
     plot_path = ROOT_PATH / "plots" / "ref_hyp_similarity"
     plot_path.mkdir(parents=True, exist_ok=True)
 
@@ -114,10 +115,13 @@ def main(args):
             continue
 
         for (start_id, end_id) in windows:
-            result_assignemnts.append((
-                alignment.seqA[start_id:end_id+1].replace('-', ''),
-                alignment.seqB[start_id:end_id+1].replace('-', '')
-            ))
+            seqA_part = alignment.seqA[start_id:end_id+1].replace('-', '')
+            seqB_part = alignment.seqB[start_id:end_id+1].replace('-', '')
+            if len(seqA_part) > min_seq_size and len(seqB_part) > min_seq_size:
+                result_assignemnts.append((
+                    seqA_part,
+                    seqB_part
+                ))
 
         with open(ROOT_PATH / 'tmp.json', 'w') as f:
             json.dump(result_assignemnts, f, indent=2)
