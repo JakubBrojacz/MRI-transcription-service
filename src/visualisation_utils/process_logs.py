@@ -2,11 +2,16 @@ import logging
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import pathlib
+
+
+ROOT_PATH = pathlib.Path(__file__).absolute().parent.parent / 'logs'
+
 
 X = []
 Y = []
 hyps = []
-with open('logs/experiment_200942_fixedxd/main.log', encoding='utf-8') as f:
+with open(ROOT_PATH / 'experiment_200942_fixedxd/main.log', encoding='utf-8') as f:
     for line in f:
         if line.startswith('hyp: ') and line[5].isdigit():
             X.append(line[5:-1])
