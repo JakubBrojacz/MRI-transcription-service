@@ -2,7 +2,7 @@ import pstats
 from pstats import SortKey
 
 '''
-python -m cProfile -o profile_stats .\src\main.py --model a.pkl
+python -m cProfile -o profiling/profile_stats .\src\main.py --model a.pkl
 '''
 
 with open('profiling/stats_readable.txt', 'w') as stream:
