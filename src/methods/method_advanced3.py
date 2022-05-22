@@ -1,6 +1,7 @@
 import logging
 import itertools
 import functools
+import json
 
 from tqdm import tqdm
 from Bio import pairwise2
@@ -159,6 +160,9 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
 
         # debug messages
         if position % 40 == 0:
+            with open(f"tmp3_{position}.txt", 'w') as f:
+                json.dump(next_column, f, indent=4)
+                json.dump(next_column_base, f, indent=4)
             max_prob = 0
             max_id = -1
             for idx in range(len(last_column)):

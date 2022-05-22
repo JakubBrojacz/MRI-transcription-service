@@ -46,7 +46,7 @@ def get_alignment(hyp, hyp_id, word, next_word):
     sep_id = alignment.seqB[::-1].index(':')
     gap_before_sep = ((alignment.seqA[::-1])[:sep_id]).count('-')
     next_word_end = max(sep_id-gap_before_sep, 1)+hyp_id
-    next_word_score = alignment.score#-ALIGNMENT_BREAK  # break from : sign
+    next_word_score = alignment.score #-ALIGNMENT_BREAK  # break from : sign
     next_word_score = max(next_word_score, 0.5)
     # if next_word == 'mr':
     #     print(hyp[hyp_id:hyp_id+len(alignemnt_goal)-1])

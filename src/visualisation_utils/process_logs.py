@@ -3,15 +3,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import pathlib
+import argparse
 
 
-ROOT_PATH = pathlib.Path(__file__).absolute().parent.parent / 'logs'
+ROOT_PATH = pathlib.Path(__file__).absolute().parent.parent.parent / 'logs'
+
+
+parser = argparse.ArgumentParser(
+        description='Recognise sound')
+parser.add_argument('--input', '-I',
+                    default=None,
+                    help='Input log dir name.',
+                    type=str)
+parser.add_argument('--desc', '-D',
+                    default="",
+                    help='Input log dir name.',
+                    type=str)
+args = parser.parse_args()
 
 
 X = []
 Y = []
 hyps = []
-with open(ROOT_PATH / 'experiment_200942_fixedxd/main.log', encoding='utf-8') as f:
+with open(ROOT_PATH / f'{args.input}/main.log', encoding='utf-8') as f:
     for line in f:
         if line.startswith('hyp: ') and line[5].isdigit():
             X.append(line[5:-1])
@@ -65,7 +79,7 @@ draw_plot([
     x
     for x, y, h in zip(X, Y, hyps)
     if len(h) > 200],
-    "WER of original ASR hypothesis",
+    f"WER of original ASR hypothesis{args.desc}",
     "WER(hypothesis)",
     0.025)
 
@@ -73,7 +87,7 @@ draw_plot([
     y
     for x, y, h in zip(X, Y, hyps)
     if len(h) > 200],
-    "WER of fixed output of post-processing system - currect iteration",
+    f"WER of fixed output of post-processing system{args.desc}",
     "WER(fixed)",
     0.1)
 
@@ -81,7 +95,7 @@ draw_plot([
     y-x
     for x, y, h in zip(X, Y, hyps)
     if len(h) > 200],
-    "Change in WER between ASR hypothesis and fixed output",
+    f"Change in WER between ASR hypothesis and fixed output{args.desc}",
     "WER(fixed) - WER(hypothesis)",
     0.1)
 

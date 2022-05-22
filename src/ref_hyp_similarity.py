@@ -22,6 +22,8 @@ import data_loading.document_importer as document_importer
 import phonemic
 import data_loading.recording_storage as recording_storage
 
+import config
+
 
 logger = logging.getLogger("Main_Console_Logger")
 logger.setLevel(logging.DEBUG)
@@ -47,8 +49,8 @@ def main(args):
         moje_path = None
 
     train_data, test_data_X, test_data_Y = train_test_data.get_train_test_data(
-        ROOT_PATH / "data_conf\\mgr\\mama\\wav_files",
-        ROOT_PATH / "data_conf\\mgr\\mama\\opisy",
+        ROOT_PATH / "data_conf\\mgr\\mimi\\wav_files",
+        ROOT_PATH / "data_conf\\mgr\\mimi\\opisy",
         10000,
         moje=moje_path,
         dont=False)
@@ -89,8 +91,8 @@ def main(args):
             )) / (max_i-min_i)
             Y1.append(val)
         fig, ax = plt.subplots(1, 1, figsize=(12, 8))
-        ax.plot(Y, label="original", alpha=0.5)
-        ax.plot(Y1, label="windowed")
+        ax.plot(Y, label="single letter", alpha=0.5)
+        ax.plot(Y1, label="10-letter window")
         quant = np.quantile(Y1, 0.1)
         # plt.hist(Y1, bins=2*window)
         # plt.title(f'0.2 quantile: {quant}')
@@ -119,7 +121,12 @@ def main(args):
         if span_start:
             ax.axvspan(span_start, len(spans), facecolor='g', alpha=0.5)
         # ax.plot(Y2, label="mismatches")
-        plt.show()
+        plt.title("Similarity between reference and hypothesis")
+        plt.xlabel("Position")
+        plt.ylabel("Similarity")
+        plt.legend()
+        plt.savefig(config.PLOT_PATH / 'ref_hyp_similarity' / f"advanced_plot_{X.stem}.png")
+        plt.close()
 
 
 if __name__ == '__main__':
