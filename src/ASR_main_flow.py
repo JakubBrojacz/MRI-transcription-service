@@ -1,5 +1,6 @@
 import logging
 import random
+from re import L
 
 import models.ngram_model as ngram_model
 import models.ngram_model_phonetic as ngram_model_phonetic
@@ -17,7 +18,10 @@ import data_loading.recording_storage as recording_storage
 # import methods.method_advanced9 as method
 # import methods.method_advanced10 as method
 # import methods.method_advanced11 as method
-import methods.method_advanced12 as method
+# import methods.method_advanced12 as method
+import methods.method_advanced13 as method
+# import methods.method_advanced13_matrix as method
+# import methods.method_advanced14 as method
 # import methods.method_simple1 as method
 import utils
 import config
@@ -43,7 +47,7 @@ class ASR:
     @utils.timeit
     def run(self, sound_file):
         track = recording_storage.Recording(sound_file).process(self.g2p)
-
+        
         fixed = method.test_with_params(track.hypothesis_phon,
                                         self.g2p,
                                         self.l1,
