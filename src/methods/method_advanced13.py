@@ -59,45 +59,69 @@ def get_replacements(dna1):
 
 def fill_prediction_table(position, words, model, transitions, word_to_id, word_len, last_column):
     next_column = [
-        0 for _ in words
+        0.0 for _ in words
     ]
 
+    best_shot = 0
+    best_shot_score = 0
     for word_id, word in enumerate(words):  # iterating over current column
-        
+        if last_column[word_id] <= 0:
+            continue
         # prediction = model.predict([word])
         prediction = model.predict(get_last_word(
             words, transitions, word_id, position, 5))
-        pred_array = np.array([
-            0.1 for _ in words
-        ])
-        for next_word in prediction:
-            pred_array[word_to_id[next_word]] = prediction[next_word]
-        pred_array = pred_array / np.sum(pred_array)
 
-        if word_len[word_id] > 1:
-            pred_array *= 0.2
-            pred_array[word_id] = pred_array[word_id]+0.8
+        pred_multi = 1
+        pred_correct_word = 0
         if word_len[word_id] > 0:
-            pred_array *= 0.4
-            pred_array[word_id] = pred_array[word_id]+0.6
+            pred_multi = 0.4
+            pred_correct_word = 0.6
+        if word_len[word_id] > 1:
+            pred_multi = 0.08
+            pred_correct_word = 0.92
 
-        for next_word_id, next_word in enumerate(words):
-            word_prediction = pred_array[next_word_id] * \
-                last_column[word_id]
-            if last_column[word_id] < 0:
-                word_prediction = 0
+        if word_len[word_id] > 0:
+            prediction[word] = prediction.get(word, 0.1)
+
+        prediction_sum = sum(prediction.values())+0.1 * \
+            (len(words)-len(prediction))
+
+        # shot_score = last_column[word_id]
+        shot_score = pred_multi*last_column[word_id]*0.1/prediction_sum
+        if shot_score > best_shot_score:
+            best_shot_score = shot_score
+            best_shot = word_id
+
+        for next_word, next_word_prediction in prediction.items():
             next_word_id = word_to_id[next_word]
-            if next_column[next_word_id] < word_prediction:
-                next_column[next_word_id] = word_prediction
+
+            next_word_final_score = pred_multi*next_word_prediction/prediction_sum
+            if next_word_id == word_id:
+                next_word_final_score += pred_correct_word
+            next_word_final_score *= last_column[word_id]
+
+            if next_column[next_word_id] < next_word_final_score:
+                next_column[next_word_id] = next_word_final_score
                 transitions[position][next_word_id] = word_id
+
+    # best_shot_score = min((
+    #     word_score
+    #     for word_score in next_column
+    #     if word_score > 0
+    # ))
+    # iterating over next column
+    for next_word_id, next_word in enumerate(words):
+        if next_column[next_word_id] < best_shot_score:
+            next_column[next_word_id] = best_shot_score
+            transitions[position][next_word_id] = best_shot
 
     return next_column
 
 
 def fill_next_column_base(position, words, dna1, next_column, word_len, last_column_base):
     next_column_base = [
-            0 for _ in words
-        ]
+        0.0 for _ in words
+    ]
 
     for word_id, word in enumerate(words):  # iterating over next column
         if next_column[word_id] == 0 or word == '':
@@ -105,15 +129,26 @@ def fill_next_column_base(position, words, dna1, next_column, word_len, last_col
             continue
         phon = word[:8]
         alignment_goal = dna1[position:position+8]
-        alignment = pairwise2.align.globalms(
+        # alignment = pairwise2.align.globalms(
+        #     alignment_goal[::-1],
+        #     phon[::-1],
+        #     6,
+        #     -6,
+        #     -2,
+        #     -0.3,
+        #     one_alignment_only=True
+        # )[0]
+        alignment = pairwise2.align.globalmc(
             alignment_goal[::-1],
             phon[::-1],
             6,
             -6,
-            -2,
-            -0.3,
+            functools.partial(gap_function, w1=-0.5, w2=-0.01),
+            functools.partial(
+                gap_function_no_start_penalty, w1=-2, w2=-0.3),
             one_alignment_only=True
         )[0]
+        # score = (alignment.score)/len(phon)+len(phon)/10000
         score = (alignment.score-0.7)/len(phon)
         if score < 0:
             score = 0
@@ -150,7 +185,7 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
     f_logger.info("start method")
     np.random.seed(42)
 
-    dna1 = get_replacements(dna1)
+    # dna1 = get_replacements(dna1)
 
     words = list(model.reverse_pronounciation_dictionary)
     word_to_id = {
@@ -158,14 +193,14 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
         for idx, word in enumerate(words)
     }
     last_column = np.array([
-        0
+        0.0
         if i > 0
         else 1
         for i, _ in enumerate(words)
     ])
 
     last_column_base = np.array([
-        0
+        0.0
         if i > 0
         else 1
         for i, _ in enumerate(words)
@@ -186,9 +221,11 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
     dna1_positions = list(range(len(dna1)))
     for position in tqdm(dna1_positions):
         # highest probability of next column (+corresponding entry in transitions) based on ngram
-        next_column = fill_prediction_table(position, words, model, transitions, word_to_id, word_len, last_column)
+        next_column = fill_prediction_table(
+            position, words, model, transitions, word_to_id, word_len, last_column)
         # values of alignment in next column
-        next_column_base = fill_next_column_base(position, words, dna1, next_column, word_len, last_column_base)
+        next_column_base = fill_next_column_base(
+            position, words, dna1, next_column, word_len, last_column_base)
 
         # multiplying probability by alignment
         for i in range(len(words)):
@@ -198,6 +235,9 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
 
         # debug messages
         if position % 40 == 0:
+            # with open(f"tmp13_{position}.txt", 'w') as f:
+            #     json.dump([float(x) for x in next_column], f, indent=4)
+            #     json.dump([float(x) for x in next_column_base], f, indent=4)
             max_prob = 0
             max_id = -1
             for idx in range(len(last_column)):
