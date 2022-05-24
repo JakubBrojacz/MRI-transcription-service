@@ -65,7 +65,7 @@ def fill_prediction_table(position, words, model, transitions, word_to_id, word_
     best_shot = 0
     best_shot_score = 0
     for word_id, word in enumerate(words):  # iterating over current column
-        if last_column[word_id] < 0:
+        if last_column[word_id] <= 0:
             continue
         # prediction = model.predict([word])
         prediction = model.predict(get_last_word(
@@ -73,20 +73,21 @@ def fill_prediction_table(position, words, model, transitions, word_to_id, word_
 
         pred_multi = 1
         pred_correct_word = 0
-        if word_len[word_id] > 1:
-            pred_multi = 0.08
-            pred_correct_word = 0.92
         if word_len[word_id] > 0:
             pred_multi = 0.4
             pred_correct_word = 0.6
+        if word_len[word_id] > 1:
+            pred_multi = 0.08
+            pred_correct_word = 0.92
 
         if word_len[word_id] > 0:
-            prediction[word] = max(prediction.get(word, 0), 0.1)
+            prediction[word] = prediction.get(word, 0.1)
 
         prediction_sum = sum(prediction.values())+0.1 * \
             (len(words)-len(prediction))
 
-        shot_score = last_column[word_id]
+        # shot_score = last_column[word_id]
+        shot_score = pred_multi*last_column[word_id]*0.1/prediction_sum
         if shot_score > best_shot_score:
             best_shot_score = shot_score
             best_shot = word_id
@@ -103,11 +104,11 @@ def fill_prediction_table(position, words, model, transitions, word_to_id, word_
                 next_column[next_word_id] = next_word_final_score
                 transitions[position][next_word_id] = word_id
 
-    best_shot_score = min((
-        word_score
-        for word_score in next_column
-        if word_score > 0
-    ))
+    # best_shot_score = min((
+    #     word_score
+    #     for word_score in next_column
+    #     if word_score > 0
+    # ))
     # iterating over next column
     for next_word_id, next_word in enumerate(words):
         if next_column[next_word_id] < best_shot_score:
