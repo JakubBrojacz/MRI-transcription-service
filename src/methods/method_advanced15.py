@@ -93,7 +93,7 @@ def fill_prediction_table(position, words, model, transitions, word_to_id, word_
     return next_column
 
 
-def fill_next_column_base(position, words, dna1, next_column, word_len, last_column_base, conf_matrix):
+def fill_next_column_base(position, words, dna1, next_column, word_len, last_column_base):
     next_column_base = [
         0.0 for _ in words
     ]
@@ -104,10 +104,20 @@ def fill_next_column_base(position, words, dna1, next_column, word_len, last_col
             continue
         phon = word[:8]
         alignment_goal = dna1[position:position+8]
-        alignment = pairwise2.align.globaldc(
+        # alignment = pairwise2.align.globalms(
+        #     alignment_goal[::-1],
+        #     phon[::-1],
+        #     6,
+        #     -6,
+        #     -2,
+        #     -0.3,
+        #     one_alignment_only=True
+        # )[0]
+        alignment = pairwise2.align.globalmc(
             alignment_goal[::-1],
             phon[::-1],
-            conf_matrix,
+            6,
+            -6,
             functools.partial(gap_function, w1=-0.5, w2=-0.01),
             functools.partial(
                 gap_function_no_start_penalty, w1=-2, w2=-0.3),
@@ -149,16 +159,6 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
 
     f_logger.info("start method")
     np.random.seed(42)
-    with open("confusion_matrix.json", 'r') as f:
-        conf_matrix_tmp = json.load(f)
-    conf_matrix = {}
-    for key in conf_matrix_tmp:
-        if conf_matrix_tmp[key] < 0:
-            conf_matrix_tmp[key] *= 2.5
-        conf_matrix[(key[0], key[1])] = conf_matrix_tmp[key]
-        conf_matrix[(key[1], key[0])] = conf_matrix_tmp[key]
-
-    dna1 = get_replacements(dna1)
 
     words = list(model.reverse_pronounciation_dictionary)
     word_to_id = {
@@ -198,12 +198,18 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
             position, words, model, transitions, word_to_id, word_len, last_column)
         # values of alignment in next column
         next_column_base = fill_next_column_base(
-            position, words, dna1, next_column, word_len, last_column_base, conf_matrix)
+            position, words, dna1, next_column, word_len, last_column_base)
 
         # multiplying probability by alignment
         for i in range(len(words)):
             last_column[i] = next_column[i]*next_column_base[i]
             last_column_base[i] = next_column_base[i]
+
+        # ids = np.argpartition(last_column_base, -4)[-4:]
+        # last_column_tmp = np.zeros_like(last_column)
+        # for id in ids:
+        #     last_column_tmp[id] = last_column[id]
+        # last_column = last_column_tmp
         last_column = last_column / np.sum(last_column)
 
         # debug messages

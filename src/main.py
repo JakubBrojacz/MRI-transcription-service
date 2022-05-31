@@ -38,7 +38,7 @@ def parse_args():
                         help='Input reports',
                         type=pathlib.Path)
     parser.add_argument('--test_size', '-T',
-                        default=20,
+                        default=40,
                         help='Input reports',
                         type=int)
     parser.add_argument('--skip', '-S',

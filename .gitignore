@@ -6,6 +6,7 @@ tmp/
 profiling/profile_stats
 profiling/stats_readable.txt
 plots/
+tmp.json
 
 
 # Byte-compiled / optimized / DLL files

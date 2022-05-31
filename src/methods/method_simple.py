@@ -42,6 +42,7 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
 
     for kgram in tqdm(l1):
         dna2 = ''.join(g2p.transliterate(kgram).lower().split())
+        # dna2 = kgram.lower()
         alignment = pairwise2.align.localxs(
             dna1, dna2, param1, param2, one_alignment_only=True)[0]
         score = alignment.score / len(dna2)

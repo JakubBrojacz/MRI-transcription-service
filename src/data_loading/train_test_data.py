@@ -1,7 +1,6 @@
 import random
 
 import config
-import data_loading.document_importer as document_importer
 
 
 def get_train_test_data(sound_path, doc_path, num_of_test_entries, moje=False, dont=False):
@@ -11,13 +10,20 @@ def get_train_test_data(sound_path, doc_path, num_of_test_entries, moje=False, d
             if file.suffix == '.m4a'
         ]
     else:
-        # test_data_X = [
-        #     sound_path / file.name.replace('.m4a', '.wav')
-        #     for file in config.MY_WAV.iterdir()
-        #     if file.suffix == '.m4a'
-        # ]
-        test_data_X = [file for file in sound_path.iterdir()
-                       if file.suffix == '.wav']
+        test_data_X = [
+            sound_path / file.name.replace('.m4a', '.wav')
+            for file in config.MY_WAV.iterdir()
+            if file.suffix == '.m4a'
+        ]
+        if num_of_test_entries > len(test_data_X):
+            additional_test = [
+                file for file in sound_path.iterdir()
+                if file.suffix == '.wav' and file not in test_data_X
+            ]
+            test_data_X.extend(random.sample(
+                additional_test,
+                min(num_of_test_entries-len(test_data_X), len(additional_test))
+            ))
 
     all_data = [file for file in doc_path.iterdir() if file.suffix == '.doc']
     test_data_X = random.sample(test_data_X, min(

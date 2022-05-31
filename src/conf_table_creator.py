@@ -1,3 +1,4 @@
+import enum
 import itertools
 import pathlib
 from Bio import pairwise2
@@ -5,19 +6,24 @@ import tqdm
 import json
 import random
 import math
+import numpy as np
+import matplotlib
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 import phonemic
 import data_loading.train_test_data as train_test_data
 import data_loading.document_importer as document_importer
 import data_loading.recording_storage as recording_storage
+import config
 
 
 def main():
     random.seed(0)
 
     _, train_data_wav, train_data_doc = train_test_data.get_train_test_data(
-        pathlib.Path(".\\data_conf\\mgr\\mama\\wav_files_orginal"),
-        pathlib.Path(".\\data_conf\\mgr\\mama\\opisy"),
+        config.ROOT_PATH / ".\\data_conf\\mgr\\mimi\\wav_files_orginal",
+        config.ROOT_PATH / ".\\data_conf\\mgr\\mimi\\opisy",
         200,
         moje=None,
         dont=False)
@@ -25,8 +31,9 @@ def main():
     g2p = phonemic.G2P()
 
     alignment_score = {}
-
+    signs_set = set()
     all_signs = {}
+    signs_assignment = {}
 
     for document_doc, document_wav in tqdm.tqdm(zip(train_data_doc,
                                                     train_data_wav)):
@@ -38,6 +45,9 @@ def main():
         hypothesis = recording_storage.\
             Recording(document_wav).\
             process(g2p).hypothesis_phon
+
+        signs_set.update(reference)
+        signs_set.update(hypothesis)
 
         # if '.' in hypothesis or '.' in reference:
         #     print('wtf')
@@ -71,6 +81,15 @@ def main():
                 if s1 not in alignment_score[s2]:
                     alignment_score[s2][s1] = 0
                 alignment_score[s2][s1] += 1
+
+    signs_assignment = {
+        sign: chr(ord('A')+i)
+        for i, sign in enumerate(signs_set)
+    }
+
+    for key in signs_set:
+        if key not in all_signs:
+            all_signs[key] = 0
 
     # fill in gaps in f matrix
     for key1, key2 in itertools.product(all_signs, all_signs):
@@ -108,7 +127,7 @@ def main():
         odds = max(alignment_score[key1][key2],
                    alignment_score[key2][key1])/e_12
         if odds == 0:
-            s_matrix[key1+key2] = -100
+            s_matrix[key1+key2] = -13
         else:
             s_matrix[key1+key2] = math.log2(odds)*2
 
@@ -117,6 +136,20 @@ def main():
 
     with open("confusion_matrix.json", 'w') as f:
         json.dump(s_matrix, f, indent=4)
+
+    heatmap_axis = sorted(list(alignment_score))
+    heatmap_data = np.array([
+        [
+            s_matrix[
+                s1 + s2
+            ]
+            for s2 in heatmap_axis
+        ]
+        for s1 in heatmap_axis
+    ])
+    ax = sns.heatmap(heatmap_data, annot=False, xticklabels=heatmap_axis, yticklabels=heatmap_axis, cmap="PiYG")
+    ax.set_title("Substitution matrix")
+    plt.show()
 
 
 if __name__ == "__main__":

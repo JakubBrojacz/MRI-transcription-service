@@ -19,42 +19,19 @@ def get_last_word(words, transitions, word_id, column_id, num_of_words):
     fixed_ids = [word_id]
 
     for trans in transitions[1:column_id][::-1]:
-        fixed_ids.append(trans[fixed_ids[-1]])
+        if trans[fixed_ids[-1]] != fixed_ids[-1]:
+            fixed_ids.append(trans[fixed_ids[-1]])
+            if len(fixed_ids) >= num_of_words:
+                break
 
     # print(fixed_ids)
     last_words = [
         words[idx]
-        for idx, _ in itertools.groupby(fixed_ids[::-1])
-    ][-num_of_words:]
+        for idx in fixed_ids[::-1]
+    ]
     return last_words
 
 
-def get_replacements(dna1):
-    with open(config.ROOT_PATH / 'tmp.json') as f:
-        replacements = json.load(f)
-    for repl_input, repl_output in sorted(replacements, key=lambda x: len(x[0]), reverse=True):
-        alignment = pairwise2.align.localms(
-            dna1,
-            repl_input,
-            1,
-            -1,
-            -1,
-            -1,
-            one_alignment_only=True
-        )[0]
-        if alignment.score < len(repl_input)*9.0/10.0:
-            continue
-        alignment_end = alignment.end - len([
-            sign
-            for sign in alignment.seqA
-            if sign == '-'
-        ])
-        f_logger.info("Replacement found!")
-        f_logger.info(repl_input)
-        f_logger.info(repl_output)
-        dna1 = dna1[:alignment.start] + repl_output + dna1[alignment_end:]
-
-    return dna1
 
 
 def fill_prediction_table(position, words, model, transitions, word_to_id, word_len, last_column):
@@ -184,8 +161,6 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
 
     f_logger.info("start method")
     np.random.seed(42)
-
-    dna1 = get_replacements(dna1)
 
     words = list(model.reverse_pronounciation_dictionary)
     word_to_id = {
