@@ -8,7 +8,10 @@ f_logger = logging.getLogger("Method_Logger")
 
 
 def get_replacements(dna1):
-    with open(config.ROOT_PATH / 'tmp.json') as f:
+    if not config.RULES_PATH.exists():
+        return dna1
+        
+    with open(config.RULES_PATH) as f:
         replacements = json.load(f)
     for repl_input, repl_output in sorted(replacements, key=lambda x: len(x[0]), reverse=True):
         alignment = pairwise2.align.localms(

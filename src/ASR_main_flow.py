@@ -13,7 +13,7 @@ import data_loading.recording_storage as recording_storage
 # import methods.method_advanced2 as method
 # import methods.method_advanced3 as method
 # import methods.method_advanced4 as method
-import methods.method_advanced6 as method
+# import methods.method_advanced6 as method
 # import methods.method_advanced6_simplified as method
 # import methods.method_advanced7 as method
 # import methods.method_advanced8 as method
@@ -21,7 +21,7 @@ import methods.method_advanced6 as method
 # import methods.method_advanced10 as method
 # import methods.method_advanced11 as method
 # import methods.method_advanced12 as method
-# import methods.method_advanced13 as method
+import methods.method_advanced13 as method
 # import methods.method_advanced13_matrix as method
 # import methods.method_advanced14 as method
 # import methods.method_advanced15 as method
@@ -51,7 +51,7 @@ class ASR:
     def run(self, sound_file):
         track = recording_storage.Recording(sound_file).process(self.g2p)
 
-        # track.hypothesis_phon = mismatch_correction.get_replacements(track.hypothesis_phon)
+        track.hypothesis_phon = mismatch_correction.get_replacements(track.hypothesis_phon)
 
         fixed = method.test_with_params(
             track.hypothesis_phon,

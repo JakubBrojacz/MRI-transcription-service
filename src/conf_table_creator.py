@@ -1,6 +1,4 @@
-import enum
 import itertools
-import pathlib
 from Bio import pairwise2
 import tqdm
 import json
@@ -8,11 +6,11 @@ import random
 import math
 import numpy as np
 import pandas as pd
-import matplotlib
 import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.spatial as sp
 import scipy.cluster.hierarchy as hc
+import argparse
 
 import phonemic
 import data_loading.train_test_data as train_test_data
@@ -21,7 +19,17 @@ import data_loading.recording_storage as recording_storage
 import config
 
 
-def main():
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='Recognise sound')
+    parser.add_argument('--plot',
+                        action='store_true',
+                        help='create relevant plots')
+    args = parser.parse_args()
+    return args
+
+
+def main(args):
     random.seed(0)
     plot_path = config.PLOT_PATH / "conf_table_creator"
     plot_path.mkdir(parents=True, exist_ok=True)
@@ -30,7 +38,7 @@ def main():
         config.ROOT_PATH / ".\\data_conf\\mgr\\mimi\\wav_files_orginal",
         config.ROOT_PATH / ".\\data_conf\\mgr\\mimi\\opisy",
         200,
-        moje=None,
+        moje=False,
         dont=False)
 
     g2p = phonemic.G2P()
@@ -139,11 +147,14 @@ def main():
         else:
             s_matrix[key1+key2] = math.log2(odds)*2
 
-    with open("confusion_table.json", 'w') as f:
+    with open(config.CONF_TABLE_PATH, 'w') as f:
         json.dump(alignment_score, f, indent=4)
 
-    with open("confusion_matrix.json", 'w') as f:
+    with open(config.MATRIX_PATH, 'w') as f:
         json.dump(s_matrix, f, indent=4)
+
+    if not args.plot:
+        return
 
     heatmap_axis = sorted(list(alignment_score))
     heatmap_axis.remove('.')
@@ -182,4 +193,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+    main(args)

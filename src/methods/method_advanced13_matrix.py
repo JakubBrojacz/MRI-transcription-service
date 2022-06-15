@@ -149,7 +149,7 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
 
     f_logger.info("start method")
     np.random.seed(42)
-    with open("confusion_matrix.json", 'r') as f:
+    with open(config.MATRIX_PATH, 'r') as f:
         conf_matrix_tmp = json.load(f)
     conf_matrix = {}
     for key in conf_matrix_tmp:
