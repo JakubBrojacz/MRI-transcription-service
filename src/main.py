@@ -19,34 +19,22 @@ c_logger = logging.getLogger("Main_Console_Logger")
 def parse_args():
     parser = argparse.ArgumentParser(
         description='Recognise sound')
-    parser.add_argument('--input', '-I',
-                        default=None,
-                        help='Input audio file. Format: m4a',
-                        type=pathlib.Path)
-    parser.add_argument('--doc', '-D',
-                        default=None,
-                        help='Input audio file. Format: m4a',
-                        type=pathlib.Path)
     parser.add_argument('--model', '-M',
                         action='store_true',
-                        help='Input reports')
+                        help='use saved model')
     parser.add_argument('--moje',
                         action='store_true',
-                        help='Use my recordings as testset')
-    parser.add_argument('--model_input',
-                        default=None,
-                        help='Input reports',
-                        type=pathlib.Path)
+                        help='use recordings from MY_WAV as test samples')
     parser.add_argument('--test_size', '-T',
                         default=40,
-                        help='Input reports',
+                        help='maximal number of test samples',
                         type=int)
     parser.add_argument('--skip', '-S',
                         action='store_true',
-                        help='Skip saving logs')
+                        help='save logs to experiment_1 directory')
     parser.add_argument('--desc',
                         default="",
-                        help='Appended to experiment name in logs',
+                        help='append to experiment name in logs',
                         type=str)
     args = parser.parse_args()
     return args
