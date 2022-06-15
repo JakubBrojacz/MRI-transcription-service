@@ -5,16 +5,15 @@ from Bio import pairwise2
 import numpy as np
 
 # get next word as probability from last words * alignment score, quite fast
-# {last_fixed_phon}:{next_fixed_candidate_phon[:10]}
+# {next_fixed_candidate_phon[:10]}:
 
 
 f_logger = logging.getLogger("Method_Logger")
 
 
 def get_alignment_score_position(hypo_phon, last_position, last_fixed_phon, next_fixed_candidate_phon):
-    alignment_goal = hypo_phon[last_position:last_position +
-                               len(last_fixed_phon)+min(10, len(next_fixed_candidate_phon))]
-    fixed_alignemnt_candidate = f'{last_fixed_phon}:{next_fixed_candidate_phon[:10]}'
+    alignment_goal = hypo_phon[last_position:last_position + min(10, len(next_fixed_candidate_phon))]
+    fixed_alignemnt_candidate = f'{next_fixed_candidate_phon[:10]}:'
     alignment_goal = alignment_goal
     fixed_alignemnt_candidate = fixed_alignemnt_candidate
     alignment = pairwise2.align.globalms(

@@ -37,7 +37,10 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model=None):
             pbar.n = position
             pbar.refresh()
             candidates = model.predict(fixed[-5:])
-            score_for_non_candidates = max(candidates.values())/5
+            if candidates:
+                score_for_non_candidates = max(candidates.values())/5
+            else:
+                score_for_non_candidates = 1
             word_scores = {
                 word: max(candidates.get(word,0), score_for_non_candidates)
                 for word in all_words

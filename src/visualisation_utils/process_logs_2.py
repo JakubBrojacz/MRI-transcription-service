@@ -4,6 +4,11 @@ import numpy as np
 import math
 import pathlib
 import argparse
+import jiwer
+
+
+def wer(ref, hypo):
+    return jiwer.wer(ref, hypo)
 
 
 ROOT_PATH = pathlib.Path(__file__).absolute().parent.parent.parent / 'logs'
@@ -31,18 +36,29 @@ args = parser.parse_args()
 X = []
 Y = []
 hyps = []
+refs = []
+fixes = []
 with open(ROOT_PATH / f'{args.input}/main.log', encoding='utf-8') as f:
     for line in f:
+        
         if line.startswith('hyp: ') and line[5].isdigit():
             X.append(line[5:-1])
         if line.startswith('hyp: ') and not line[5].isdigit():
             hyps.append(line[5:-1])
         if line.startswith('fix: ') and line[5].isdigit():
             Y.append(line[5:-1])
+        if line.startswith('fix: ') and not line[5].isdigit():
+            fixes.append(line[5:-1])
+        if line.startswith('ref: ') and not line[5].isdigit():
+            refs.append(line[5:-1])
 
 print(X)
 print(Y)
 
+Y = [
+    wer(' '.join(ref.split()[:len(ref.split())//4]), ' '.join(fixa.split()[:len(ref.split())//4]))
+    for ref, fixa in zip(refs, fixes)
+]
 
 # plt.plot(sorted([float(y)-float(x) for x,y in zip(X,Y)]), '.', label="Experiment")
 # plt.show()

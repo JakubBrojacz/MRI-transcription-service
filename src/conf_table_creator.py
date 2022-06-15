@@ -7,9 +7,12 @@ import json
 import random
 import math
 import numpy as np
+import pandas as pd
 import matplotlib
 import seaborn as sns
 import matplotlib.pyplot as plt
+import scipy.spatial as sp
+import scipy.cluster.hierarchy as hc
 
 import phonemic
 import data_loading.train_test_data as train_test_data
@@ -20,6 +23,8 @@ import config
 
 def main():
     random.seed(0)
+    plot_path = config.PLOT_PATH / "conf_table_creator"
+    plot_path.mkdir(parents=True, exist_ok=True)
 
     _, train_data_wav, train_data_doc = train_test_data.get_train_test_data(
         config.ROOT_PATH / ".\\data_conf\\mgr\\mimi\\wav_files_orginal",
@@ -42,9 +47,12 @@ def main():
         reference_orth = document_importer.import_document(document_doc)
         reference_orth = document_importer.preprocess(reference_orth)
         reference = g2p.transliterate(reference_orth)
-        hypothesis = recording_storage.\
-            Recording(document_wav).\
-            process(g2p).hypothesis_phon
+        hypothesis_rec = recording_storage.\
+            Recording(document_wav)
+        if not hypothesis_rec.save_path.exists():
+            print(f"Skipping {hypothesis_rec.save_path}")
+            continue
+        hypothesis = hypothesis_rec.process(g2p).hypothesis_phon
 
         signs_set.update(reference)
         signs_set.update(hypothesis)
@@ -138,6 +146,7 @@ def main():
         json.dump(s_matrix, f, indent=4)
 
     heatmap_axis = sorted(list(alignment_score))
+    heatmap_axis.remove('.')
     heatmap_data = np.array([
         [
             s_matrix[
@@ -148,8 +157,28 @@ def main():
         for s1 in heatmap_axis
     ])
     ax = sns.heatmap(heatmap_data, annot=False, xticklabels=heatmap_axis, yticklabels=heatmap_axis, cmap="PiYG")
-    ax.set_title("Substitution matrix")
+    ax.set_title("Similarity matrix")
+    # plt.show()
+    plt.savefig(plot_path / "similarity_matrix.png")
+    plt.close()
+
+    clustermap_data = pd.DataFrame(heatmap_data, columns=heatmap_axis, index=heatmap_axis)
+    linkage_matrix = heatmap_data
+    linkage_matrix = -linkage_matrix
+    linkage_matrix -= np.amin(linkage_matrix)
+    for i in range(len(heatmap_axis)):
+        linkage_matrix[i][i] = 0
+    ax = sns.heatmap(linkage_matrix, annot=False, xticklabels=heatmap_axis, yticklabels=heatmap_axis, cmap="PiYG")
+    ax.set_title("Linkage matrix")
     plt.show()
+    plt.savefig(plot_path / "linkage_matrix.png")
+    plt.close()
+    linkage = hc.linkage(sp.distance.squareform(linkage_matrix), method='average')
+    g = sns.clustermap(clustermap_data, row_cluster=False, col_linkage=linkage)
+    # ax.set_title("Substitution matrix")
+    plt.savefig(plot_path / "clustered_phonemes.png")
+    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":

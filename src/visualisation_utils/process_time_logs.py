@@ -7,6 +7,8 @@ import argparse
 
 
 ROOT_PATH = pathlib.Path(__file__).absolute().parent.parent.parent / 'logs'
+PLOT_PATH = ROOT_PATH.parent / 'plots' / 'process_logs'
+PLOT_PATH.mkdir(exist_ok=True, parents=True)
 
 
 parser = argparse.ArgumentParser(
@@ -16,6 +18,10 @@ parser.add_argument('--input', '-I',
                     help='Input log dir name.',
                     type=str)
 parser.add_argument('--desc', '-D',
+                    default="",
+                    help='Input log dir name.',
+                    type=str)
+parser.add_argument('--save_prefix', '-S',
                     default="",
                     help='Input log dir name.',
                     type=str)
@@ -32,16 +38,21 @@ with open(ROOT_PATH / f'{args.input}/time.log', encoding='utf-8') as f:
 print(Y)
 
 
-def draw_plot(x1, title, xlabel):
+def draw_plot(x1, title, xlabel, save_prefix):
 
     plt.hist(x1,
              ec='black')
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel("Number of testcases")
-    plt.show()
+    if save_prefix:
+        plt.savefig(PLOT_PATH / f"{save_prefix}{title}.png")
+    else:
+        plt.show()
+    plt.close()
 
 
 draw_plot(Y,
           f"Execution time of method",
-          "time [s]")
+          "time [s]",
+          args.save_prefix)

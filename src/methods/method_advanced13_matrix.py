@@ -158,8 +158,6 @@ def test_with_params(dna1, g2p, l1, track, param1, param2, model):
         conf_matrix[(key[0], key[1])] = conf_matrix_tmp[key]
         conf_matrix[(key[1], key[0])] = conf_matrix_tmp[key]
 
-    dna1 = get_replacements(dna1)
-
     words = list(model.reverse_pronounciation_dictionary)
     word_to_id = {
         word: idx
