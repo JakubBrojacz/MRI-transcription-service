@@ -21,7 +21,7 @@ paths.
 Code was tested on python3.8. In order to install all required 
 libraries run
 ```
-pip3 install -r requirements.txt TODO
+pip3 install -r requirements.txt
 ```
 
 ## Data
