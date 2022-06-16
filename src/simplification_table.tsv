@@ -1,0 +1,107 @@
+101	p	p	p	p	p	p	p	p	p	p	Voiceless bilabial plosive
+102	b	b	b	b	b	b	b	b	b	b	Voiced bilabial plosive
+103	t	t	t	t	t	t	t	t	t	t	Voiceless alveolar plosive
+104	d	d	d	d	d	d	d	d	d	d	Voiced alveolar plosive
+105	ʈ	tr)	t(	tr	\t.	t<	t.	t.	tr	t`	Voiceless retroflex plosive
+106	ɖ	dr)	d(	dr	\d.	d<	d.	d.	dr	d`	Voiced retroflex plosive
+107	c	c	c	c	c	c	c	c	c	c	Voiceless palatal plosive
+108	ɟ	j-	J	J	\j-	j=	dj	J^	J	J\	Voiced palatal plosive
+109	k	k	k	k	k	k	k	k	k	k	Voiceless velar plosive
+110	ɡ	g	g	g	\gs	g<	g	g	g	g	Voiced velar plosive
+111	q	q	q	q	q	q	q	q	q	q	Voiceless uvular plosive
+112	ɢ	G	G	G	\gc	G=	G	G	Q	G	Voiced uvular plosive
+113	ʔ	?	?	?	\?g	?=	?	?	?	?	Glottal plosive
+114	m	m	m	m	m	m	m	m	m	m	Voiced bilabial nasal
+115	ɱ	m"	m>	mv	\mj	m>	mD	M	M	F	Voiced labiodental nasal
+116	n	n	n	n	n	n	n	n	n	n	Voiced alveolar nasal
+117	ɳ	nr)	n(	nr	\n.	n<	n.	n.	nr	n`	Voiced retroflex nasal
+118	ɲ	nj)	n)	nj	\nj	n=	nj	n^	n~	J	Voiced palatal nasal
+119	ŋ	ng)	g~	ng	\ng	n>	N	N	N	N	Voiced velar nasal
+120	ɴ	N	N	N	\nc	N=	nU	n"	Nq[a]	N\	Voiced uvular nasal
+121	ʙ	B		bb	\bc	B=		b<trl>	B	B\	Voiced bilabial trill
+122	r	r	r	rr	r	r	r	r<trl>	r	r	Voiced alveolar trill
+123	ʀ	R	R	RR	\rc	R=	R	r"	R	R\	Voiced uvular trill
+124	ɾ	r"	r*	dt	\fh	r>	r[	*	d(	4	Voiced alveolar tap
+125	ɽ	rr)	r(*	rt	\f.	r<	r.[	*.	rr	r`	Voiced retroflex flap
+126	ɸ	P"	F	F	\ff	f=	P	P	F	p\	Voiceless bilabial fricative
+127	β	B"	B	V	\bf	b=	B	B	V	B	Voiced bilabial fricative
+128	f	f	f	f	f	f	f	f	f	f	Voiceless labiodental fricative
+129	v	v	v	v	v	v	v	v	v	v	Voiced labiodental fricative
+130	θ	O-	s[]	sd	\tf	t=	0D	T	T	T	Voiceless dental fricative
+131	ð	d-	z[]	zd	\dh	d=	6D	D	D	D	Voiced dental fricative
+132	s	s	s	s	s	s	s	s	s	s	Voiceless alveolar fricative
+133	z	z	z	z	z	z	z	z	z	z	Voiced alveolar fricative
+134	ʃ	S	sV	S	\sh	s=	S	S	S	S	Voiceless postalveolar fricative
+135	ʒ	3"	zV	Z	\zh	z=	Z	Z	Z	Z	Voiced postalveolar fricative
+136	ʂ	sr)	s(	sr	\s.	s<	s.	s.	sr	S`	Voiceless retroflex fricative
+137	ʐ	zr)	z(	zr	\z.	z<	z.	z.	zr	Z`	Voiced retroflex fricative
+138	ç	c"	c$	c\	\c,	c=	C	C	C	C	Voiceless palatal fricative
+139	ʝ	j"	j$	J\	\jc	j<	jF	C<vcd>	j^[a]	J\	Voiced palatal fricative
+140	x	x	x	x	x	x	x	x	x	x	Voiceless velar fricative
+141	ɣ	g"	r=<	g\	\gf	g=	gF	Q	G	G	Voiced velar fricative
+142	χ	X	X	X	\cf	x=	X	X	X	X	Voiceless uvular fricative
+143	ʁ	R%	R=	G\[b]	\ri	R>	RF	g"	K	R	Voiced uvular fricative
+144	ħ	h-	h<	H	\h-	h>	H	H	H	X\	Voiceless pharyngeal fricative
+145	ʕ	?&	6<	Hv	\9e	?<	9	H<vcd>	!	?\	Voiced pharyngeal fricative
+146	h	h	h	h	h	h	h	h	h	h	Voiceless glottal fricative
+147	ɦ	h"	6	hv	\h^	h<	hh	h<?>	hv[a]	h\	Voiced glottal fricative
+148	ɬ	l-	l%$	ls	\l-	l=	hlF	s<lat> or L[c]	hl[a]	K	Voiceless alveolar lateral fricative
+149	ɮ	l3")	l$	lz	\lz	l>	lF	z<lat>	Zl[a]	K\	Voiced alveolar lateral fricative
+150	ʋ	v"	v>		\vs	v=	vA	r<lbd>	V[[a]	P or V\	Voiced labiodental approximant
+151	ɹ	r&	r=	r	\rt	r=	rA	r	9	r\	Voiced alveolar approximant
+152	ɻ	jr)	r=(		\r.	R<	r.A	r.	9r	r\`	Voiced retroflex approximant
+153	j	j	j	j	j	j	j	j	j	j	Voiced palatal approximant
+154	ɰ	m&"		Rg	\ml	w>	RA	j<vel>	4)[a]	M\	Voiced velar approximant
+155	l	l	l	l	l	l	l	l	l	l	Voiced alveolar lateral approximant
+156	ɭ	lr)	l(	lr	\l.	l<	l.	l.	lr	l`	Voiced retroflex lateral approximant
+157	ʎ	y&	l)	lj	\yt	L<	lj	l^	L	L	Voiced palatal lateral approximant
+158	ʟ	L			\lc	L=	L	L[c]	Lg[a]	L\	Voiced velar lateral approximant
+160	ɓ	b$	b,,	b?	\b^	b>	b<	b`	b<	b_<	Voiced bilabial implosive
+162	ɗ	d$	d,,	d?	\d^	d>	d<	d`	d<	d_<	Voiced alveolar implosive
+164	ʄ	j$	J,,	J?	\j^	j>	dj<	J`	J<	J\_<	Voiced palatal implosive
+166	ɠ	g$	g,,	g?	\g^	g>	g<	g`	g<	g_<	Voiced velar implosive
+168	ʛ	G$	G,,	G?	\G^	G>	G<	G`	Q<	G\_<	Voiced uvular implosive
+169	ʍ	w&			\wt	w=	hw	v<vls>	W	W	Voiceless labial–velar fricative
+170	w	w	w	w	w	w	w	w	w	w	Voiced labial–velar approximant
+171	ɥ	h&	w.		\ht	y< or h=	wj	j<rnd>	jw[a]	H	Voiced labial–palatal approximant
+172	ʜ	H			\hc	Q=				H\	Voiceless epiglottal trill
+173	ʡ	?-			\?-	H=	99			>\	Epiglottal plosive
+174	ʢ	?"			\9-	Q<				<\	Voiced epiglottal trill
+175	ɧ	Sx)			\hj	H>				x\	Sj-sound
+176	ʘ	p!	p*		\O.	p=		p!	p|	O\	Bilabial click
+177	ǀ	t!	t*	t!	\|1	!<	/	t!	|	|\	Dental click
+178	ǃ	r!			!	!	!	c![d]		!\	Alveolar click
+179	ǂ	c!	c*	c!	\|-	!=	/=	c![d]	c|	=\	Palatal click
+180	ǁ	l!	l*	l!	\|2	!>	#	l!	||	|\|\	Alveolar lateral click
+181	ɺ	l"		lt	\rl	L>	l[	*<lat>	l)	l\	Voiced alveolar lateral flap
+182	ɕ	ci)	sV>	ss	\cc	c<	SJ		c}	s\	Voiceless alveolo-palatal fricative
+183	ʑ	zi)	zV>	zz	\zc	z>	ZJ		z}	z\	Voiced alveolo-palatal fricative
+184	ⱱ					v<	v[				Voiced labiodental flap
+209	ɫ	l~)	l-		\l~	l~~	l-	L[c]		5	Velarized alveolar lateral approximant
+301	i	i	i	i	i	i	i	i	i	i	Close front unrounded vowel
+302	e	e	e	e	e	e	e	e	e	e	Close-mid front unrounded vowel
+303	ɛ	E	E	E	\ef	e<	E	E	E	E	Open-mid front unrounded vowel
+304	a	a	a	a	a	a	a	a	a	a	Open front unrounded vowel
+305	ɑ	a"	A	aa	\as	a=	a_	A	A	A	Open back unrounded vowel
+306	ɔ	c&	O	O	\ct	o<	O	O	>	O	Open-mid back rounded vowel
+307	o	o	o	o	o	o	o	o	o	o	Close-mid back rounded vowel
+308	u	u	u	u	u	u	u	u	u	u	Close back rounded vowel
+309	y	y	y or i!	y	y	y	y	y	y	y	Close front rounded vowel
+310	ø	o/)	0 or e!	oe	\o/	o>	o/	Y	7	2	Close-mid front rounded vowel
+311	œ	oe)	E!	oE	\oe	E<	E)	W	8	9	Open-mid front rounded vowel
+312	ɶ	OE)	a!	OE	\Oe	E>		&.	6	&	Open front rounded vowel
+313	ɒ	a"&	A= or A!	ao	\ab	o=	a_)	A.	5	Q	Open back rounded vowel
+314	ʌ	v&	^, V= or O!	A	\vt	u>	^	V	^	V	Open-mid back unrounded vowel
+315	ɤ	U"	o!	oo	\rh	O>	o(	o-	2	7	Close-mid back unrounded vowel
+316	ɯ	m&	m= or u!	uu	\mt	u=	uu	u-	4	M	Close back unrounded vowel
+317	ɨ	i-	i"	i-	\i-	I=	i_	i"	ix	1	Close central unrounded vowel
+318	ʉ	u-	u"	u-	\u-	U=	u+	u"	ux	}	Close central rounded vowel
+319	ɪ	I	I	I	\ic	i=	I	I	I	I	Near-close near-front unrounded vowel
+320	ʏ	Y	Y	Y	\yc	Y=	Y	U.	Y	Y	Near-close near-front rounded vowel
+321	ʊ	U	U	U	\hs	u<	U	U	U	U	Near-close near-back rounded vowel
+323	ɵ	o-	o"		\o-	O=	@)	@.	ox	8	Close-mid central rounded vowel
+324	ɐ	a&			\at	a>	4		ax	6	Near-open central vowel
+325	æ	ae)	@	ae	\ae	a<	aa	&	@	{	Near-open front unrounded vowel
+326	ɜ	E&	E"	3	\er	e>	3	V"	3	3	Open-mid central unrounded vowel
+395	ɞ	E"	O"		\kb	O<	3)	O"		3\	Open-mid central rounded vowel
+397	ɘ	e&	e"	6	\e-	E=	@	@<umd>		@\	Close-mid central unrounded vowel

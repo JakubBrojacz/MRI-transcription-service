@@ -39,4 +39,8 @@ def get_train_test_data(sound_path, doc_path, num_of_test_entries, moje=False, d
         train_data = [test_data_Y[0]]
         test_data_X = [test_data_X[0]]
         test_data_Y = [test_data_Y[0]]
+    
+    if len(train_data) < 1:
+        raise Exception("Empty training data set")
+
     return train_data, test_data_X, test_data_Y

@@ -8,7 +8,7 @@ import config
 
 class G2P:
     def __init__(self):
-        df = pd.read_csv(config.ROOT_PATH / 'aaa.tsv', sep='\t',
+        df = pd.read_csv(config.PHONETIC_SIMPLIFICATION_TABLE, sep='\t',
                          header=None, engine='python', encoding="utf-8")
         self.simplification_table = {
             row[1][1]: row[1][6][0]
