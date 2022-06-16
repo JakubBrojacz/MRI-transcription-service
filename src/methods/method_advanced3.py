@@ -11,8 +11,6 @@ import numpy as np
 # dynamic programming , based on advanced1, I think the best one at the moment
 # reduce word to 10 first signs
 
-# SOMETHING IS BROKEN
-
 
 f_logger = logging.getLogger("Method_Logger")
 

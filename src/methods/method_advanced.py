@@ -1,14 +1,9 @@
 import logging
-import itertools
-import json
 import re
 import functools
 
 from tqdm import tqdm
 from Bio import pairwise2
-
-import config
-import metrics
 
 
 # get next word based on probability after previous 4 words and alignment of next word at the beginning of hypothesis 

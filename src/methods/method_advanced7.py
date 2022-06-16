@@ -1,5 +1,4 @@
 import logging
-from turtle import position
 
 from tqdm import tqdm
 from Bio import pairwise2
@@ -8,6 +7,7 @@ import functools
 
 
 # recursive tree-based
+# too slow
 
 
 f_logger = logging.getLogger("Method_Logger")

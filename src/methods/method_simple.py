@@ -1,12 +1,8 @@
 import logging
 import itertools
-import json
 
 from tqdm import tqdm
 from Bio import pairwise2
-
-import config
-import metrics
 
 
 # Method described in paper - alignmnet of 5-grams into whole hypothesis

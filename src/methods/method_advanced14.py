@@ -1,6 +1,5 @@
 import logging
 import itertools
-import functools
 
 from tqdm import tqdm
 from Bio import pairwise2
@@ -9,7 +8,7 @@ import numpy as np
 import config
 
 
-# plot of word alignment
+# plot of word alignment, method not returning anything
 
 
 f_logger = logging.getLogger("Method_Logger")

@@ -1,15 +1,10 @@
 import logging
-import itertools
 import json
 import re
 import functools
-from sklearn.metrics import confusion_matrix
 
 from tqdm import tqdm
 from Bio import pairwise2
-
-import config
-import metrics
 
 
 # advanced 1 but with confusion matrix

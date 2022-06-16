@@ -1,7 +1,4 @@
 import logging
-import itertools
-import json
-import re
 import time
 import functools
 
@@ -9,9 +6,6 @@ from tqdm import tqdm
 from Bio import pairwise2
 import numpy as np
 from hmmlearn import hmm
-
-import config
-import metrics
 
 
 # Failed HMM try

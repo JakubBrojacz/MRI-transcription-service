@@ -1,17 +1,8 @@
-import enum
 import logging
-import itertools
-import json
-import re
-import functools
-from sklearn.utils import resample
 
 from tqdm import tqdm
 from Bio import pairwise2
 import numpy as np
-
-import config
-import metrics
 
 
 # dynamic programming - only arrows between beginnings of the words

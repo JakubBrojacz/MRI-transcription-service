@@ -5,9 +5,6 @@ import json
 from tqdm import tqdm
 from Bio import pairwise2
 
-import config
-import metrics
-
 
 # Simple method, but with confusion matrix
 
